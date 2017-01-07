@@ -13,7 +13,6 @@
 #endif
 
 
-using System;
 using Rotorz.ReorderableList.Internal;
 using UnityEditor;
 using UnityEngine;

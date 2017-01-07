@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 
 public class Player : MonoBehaviour
 {
@@ -9,7 +8,6 @@ public class Player : MonoBehaviour
 
     void Awake()
     {
-
         m_PhotonView = GetComponent<PhotonView>();
     }
 

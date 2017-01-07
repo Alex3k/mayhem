@@ -8,18 +8,17 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-using UnityEngine;  
-using System.Collections;  
-using UnityEngine.EventSystems;  
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ExitGames.UtilityScripts
 {
 
-	/// <summary>
-	/// Use this on toggles texts to have some color transition on the text depending on the isOnState.
-	/// </summary>
-	[RequireComponent(typeof(Text))]
+    /// <summary>
+    /// Use this on toggles texts to have some color transition on the text depending on the isOnState.
+    /// </summary>
+    [RequireComponent(typeof(Text))]
 	public class TextToggleIsOnTransition : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler  {
 
 		public Toggle toggle;

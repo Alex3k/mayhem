@@ -10,13 +10,11 @@
 
 
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEditor;
 
 namespace ExitGames.UtilityScripts
 {
-	[CustomEditor(typeof(PlayerRoomIndexing))]
+    [CustomEditor(typeof(PlayerRoomIndexing))]
 	public class PlayerRoomIndexingInspector : Editor {
 
 		PlayerRoomIndexing _target;

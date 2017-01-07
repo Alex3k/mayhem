@@ -9,27 +9,24 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 using Photon;
-using ExitGames.Client.Photon;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 
 
 namespace ExitGames.UtilityScripts
 {
-	/// <summary>
-	/// Implements consistent indexing in a room/game with help of room properties. Access them by PhotonPlayer.GetRoomIndex() extension.
-	/// </summary>
-	/// <remarks>
-	/// indexing ranges from 0 to the maximum number of Players.
-	/// indexing remains for the player while in room.
-	/// If a Player is indexed 2 and player indexes 1 leaves, index 1 become vacant and will assigned to the future player joining (the first available vacant index is assigned when joining)
-	/// </remarks>
-	public class PlayerRoomIndexing : PunBehaviour
+    /// <summary>
+    /// Implements consistent indexing in a room/game with help of room properties. Access them by PhotonPlayer.GetRoomIndex() extension.
+    /// </summary>
+    /// <remarks>
+    /// indexing ranges from 0 to the maximum number of Players.
+    /// indexing remains for the player while in room.
+    /// If a Player is indexed 2 and player indexes 1 leaves, index 1 become vacant and will assigned to the future player joining (the first available vacant index is assigned when joining)
+    /// </remarks>
+    public class PlayerRoomIndexing : PunBehaviour
 	{
 
 		#region Public Properties

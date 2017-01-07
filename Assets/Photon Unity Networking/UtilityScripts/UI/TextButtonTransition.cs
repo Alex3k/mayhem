@@ -8,18 +8,17 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
-using UnityEngine;  
-using System.Collections;  
-using UnityEngine.EventSystems;  
+using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ExitGames.UtilityScripts
 {
 
-	/// <summary>
-	/// Use this on Button texts to have some color transition on the text as well without corrupting button's behaviour.
-	/// </summary>
-	[RequireComponent(typeof(Text))]
+    /// <summary>
+    /// Use this on Button texts to have some color transition on the text as well without corrupting button's behaviour.
+    /// </summary>
+    [RequireComponent(typeof(Text))]
 	public class TextButtonTransition : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler {
 		
 		Text _text;

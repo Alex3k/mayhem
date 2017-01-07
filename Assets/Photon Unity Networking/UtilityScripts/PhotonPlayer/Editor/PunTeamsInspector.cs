@@ -8,15 +8,12 @@
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 
 namespace ExitGames.UtilityScripts
 {
-	[CustomEditor(typeof(PunTeams))]
+    [CustomEditor(typeof(PunTeams))]
 	public class PunTeamsInspector : Editor {
 
 
