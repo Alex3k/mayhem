@@ -25,6 +25,14 @@ namespace Assets
             }
         }
 
+        void OnTriggerStay2D(Collider2D collision)
+        {
+            if (collision.transform.tag == "BulletCollider")
+            {
+                Destroy(collision.transform.parent.gameObject);
+            }
+        }
+
         private void HandleMovement()
         {
             transform.position += ((transform.right * MovementSpeed) * Time.deltaTime);
