@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     void Awake()
     {
         m_PhotonView = GetComponent<PhotonView>();
-        gun = new Weapon(5, 0.1f, 1);
+        gun = new Weapon(100, 0.1f, 1);
     }
 
     void FixedUpdate()
@@ -29,16 +29,18 @@ public class Player : MonoBehaviour
 
     void handleWeaponary()
     {
-        if (Input.GetKey(KeyCode.Space))
+        var move = new Vector3(CnControls.CnInputManager.GetAxis("ShootHorizontal"), CnControls.CnInputManager.GetAxis("ShootVertical"), 0);
+
+        if (move != Vector3.zero)
         {
-            gun.Shoot(transform.position, transform.eulerAngles);
+            float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
+
+            gun.Shoot(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
         }
     }
 
     void UpdateMovement()
     {
-
-
         var move = new Vector3(CnControls.CnInputManager.GetAxis("Horizontal"), CnControls.CnInputManager.GetAxis("Vertical"), 0);
         transform.position += move * MovementSpeed * Time.deltaTime;
 
