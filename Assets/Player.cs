@@ -37,19 +37,12 @@ public class Player : MonoBehaviour
 
     void UpdateMovement()
     {
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.position += ((transform.right * MovementSpeed) * Time.deltaTime);
-        }
 
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.Rotate(Vector3.forward * RotateSpeed);
-        }
 
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.Rotate(Vector3.forward * -RotateSpeed);
-        }
+        var move = new Vector3(CnControls.CnInputManager.GetAxis("Horizontal"), CnControls.CnInputManager.GetAxis("Vertical"), 0);
+        transform.position += move * MovementSpeed * Time.deltaTime;
+
+        float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 }
