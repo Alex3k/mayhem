@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     void Awake()
     {
         m_PhotonView = GetComponent<PhotonView>();
-        gun = new Weapon(5, 0.1f, 10);
+        gun = new Weapon(5, 0.1f, 1);
     }
 
     void FixedUpdate()

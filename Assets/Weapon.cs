@@ -33,13 +33,13 @@ namespace Assets
 
             if (PhotonNetwork.time - m_LastFireTime > FireRate)
             {
-                if (ClipSize - 1 == 0)
+                if (m_CurrentAmmoInClip == 0)
                 {
                     Reload();
                 }
                 else
                 {
-                    GameObject player = PhotonNetwork.Instantiate("Bullet", position, Quaternion.Euler(angle), 0);
+                    PhotonNetwork.Instantiate("Bullet", position, Quaternion.Euler(angle), 0);
                     m_CurrentAmmoInClip--;
                     m_LastFireTime = PhotonNetwork.time;
                 }
@@ -51,6 +51,11 @@ namespace Assets
             if (m_IsReloading)
             {
                 m_IsReloading = PhotonNetwork.time - m_ReloadStartTime < ReloadTime;
+
+                if(m_IsReloading == false)
+                {
+                    m_CurrentAmmoInClip = ClipSize;
+                }
             }
 
             return m_IsReloading;
