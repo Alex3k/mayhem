@@ -5,10 +5,12 @@ public class Zombie : MonoBehaviour
     PhotonView m_PhotonView;
     private Vector3 m_Target;
     public float MovementSpeed;
+    private Rigidbody2D m_MyRigidBody;
 
     // Use this for initialization
     void Awake () {
         m_PhotonView = GetComponent<PhotonView>();
+
         getNewTarget();
     }
 
@@ -31,6 +33,13 @@ public class Zombie : MonoBehaviour
         else
         {
             getNewTarget();
+        }
+    }
+
+    void OnTriggerStay2D(Collider2D collision)
+    {
+        if(collision.transform.tag == "Player") {
+            m_Target = collision.transform.position;
         }
     }
 
