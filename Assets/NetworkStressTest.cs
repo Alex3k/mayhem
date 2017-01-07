@@ -52,11 +52,11 @@ public class NetworkStressTest : MonoBehaviour
 
     void SpawnZombie()
     {
-        int x = 8;
-        int y = 5;
+        float mapWidth = GameObject.Find("Map").GetComponent<Map>().Size.x;
+        float mapHeight = GameObject.Find("Map").GetComponent<Map>().Size.y;
 
         m_ZombieSpawnTime = Random.Range(1, 3);
-        PhotonNetwork.InstantiateSceneObject("Zombie", new Vector3(Random.Range(-x, x), Random.Range(-y, y), 0), Quaternion.identity, 0, null);
+        PhotonNetwork.InstantiateSceneObject("Zombie", new Vector3(Random.Range(0, mapWidth), Random.Range(0, mapHeight), 0), Quaternion.identity, 0, null);
         m_LastSpawnTime = PhotonNetwork.time;
         Stats.ZombieCount++;
     }

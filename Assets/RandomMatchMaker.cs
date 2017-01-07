@@ -1,20 +1,23 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class RandomMatchMaker : Photon.PunBehaviour {
+public class RandomMatchMaker : Photon.PunBehaviour
+{
 
     public Text ConnectionState;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         PhotonNetwork.ConnectUsingSettings("0.1");
 
     }
 
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
         ConnectionState.text = PhotonNetwork.connectionStateDetailed.ToString();
-	}
+    }
 
     public override void OnJoinedLobby()
     {
@@ -35,6 +38,6 @@ public class RandomMatchMaker : Photon.PunBehaviour {
     public override void OnJoinedRoom()
     {
         GameObject player = PhotonNetwork.Instantiate("Sprite", Vector3.zero, Quaternion.identity, 0);
- 
+        GameObject.Find("Main Camera").AddComponent<Camera2DFollow>().target = player.transform;
     }
 }
