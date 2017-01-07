@@ -1,19 +1,19 @@
-﻿using UnityEngine;
+﻿using Assets;
+using UnityEngine;
+
 
 public class Player : MonoBehaviour
 {
     public float MovementSpeed = 3f;
     public float RotateSpeed = 5f;
+
     PhotonView m_PhotonView;
+    private Weapon gun;
 
     void Awake()
     {
         m_PhotonView = GetComponent<PhotonView>();
-    }
-
-    void Update()
-    {
-
+        gun = new Weapon(5, 0.1f, 10);
     }
 
     void FixedUpdate()
@@ -29,11 +29,9 @@ public class Player : MonoBehaviour
 
     void handleWeaponary()
     {
-        if (Input.GetKeyUp(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
-            Debug.Log("Fire");
-            GameObject player = PhotonNetwork.Instantiate("Bullet", transform.position, Quaternion.Euler(transform.right), 0);
-
+            gun.Shoot(transform.position, transform.eulerAngles);
         }
     }
 
@@ -41,7 +39,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W))
         {
-            transform.position += transform.right * MovementSpeed * Time.deltaTime;
+            transform.position += ((transform.right * MovementSpeed) * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.A))

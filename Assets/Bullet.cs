@@ -27,7 +27,7 @@ namespace Assets
 
         private void HandleMovement()
         {
-            transform.position += transform.right * MovementSpeed * Time.deltaTime;
+            transform.position += ((transform.right * MovementSpeed) * Time.deltaTime);
         }
     }
 }
