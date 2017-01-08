@@ -30,10 +30,10 @@ public class Camera2DFollow : MonoBehaviour
         float camVertExtent = cam.orthographicSize;
         float camHorzExtent = cam.aspect * camVertExtent;
 
-        float leftBound = m_WorldMap.Bounds.min.x + camHorzExtent;
-        float rightBound = m_WorldMap.Bounds.max.x - camHorzExtent;
-        float bottomBound = m_WorldMap.Bounds.min.y + camVertExtent;
-        float topBound = m_WorldMap.Bounds.max.y - camVertExtent;
+        float leftBound = m_WorldMap.Bounds.min.x + camHorzExtent + (m_WorldMap.TileSize.x / 2);
+        float rightBound = m_WorldMap.Bounds.max.x - camHorzExtent + (m_WorldMap.TileSize.y / 2);
+        float bottomBound = m_WorldMap.Bounds.min.y + camVertExtent + (m_WorldMap.TileSize.y / 2);
+        float topBound = m_WorldMap.Bounds.max.y - camVertExtent + (m_WorldMap.TileSize.y / 2);
 
         float camX = Mathf.Clamp(target.transform.position.x, leftBound, rightBound);
         float camY = Mathf.Clamp(target.transform.position.y, bottomBound, topBound);
