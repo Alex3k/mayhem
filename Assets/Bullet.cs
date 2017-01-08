@@ -29,7 +29,6 @@ namespace Assets
         {
             if (collision.transform.tag == "BulletCollider")
             {
-                Stats.ZombieCount--;
                 Destroy(collision.transform.parent.gameObject);
             }
         }

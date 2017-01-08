@@ -9,14 +9,20 @@ public class Zombie : MonoBehaviour
 
     // Use this for initialization
     void Awake () {
-        m_PhotonView = GetComponent<PhotonView>();
+        if (PhotonNetwork.isMasterClient)
+        {
+            m_PhotonView = GetComponent<PhotonView>();
 
-        getNewTarget();
+            getNewTarget();
+        }
     }
 
     // Update is called once per frame
     void FixedUpdate () {
-        UpdateMovement();
+        if (PhotonNetwork.isMasterClient)
+        {
+            UpdateMovement();
+        }
 	}
 
     void UpdateMovement()
@@ -38,8 +44,12 @@ public class Zombie : MonoBehaviour
 
     void OnTriggerStay2D(Collider2D collision)
     {
-        if(collision.transform.tag == "Player") {
-            m_Target = collision.transform.position;
+        if (PhotonNetwork.isMasterClient)
+        {
+            if (collision.transform.tag == "Player")
+            {
+                m_Target = collision.transform.position;
+            }
         }
     }
 
