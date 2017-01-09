@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 
-namespace Assets
+namespace Mayhem.Weaponary
 {
-
     public class Weapon
     {
         public float FireRate;

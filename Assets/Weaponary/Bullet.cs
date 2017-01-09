@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets
+namespace Mayhem.Weaponary
 {
     public class Bullet : MonoBehaviour
     {
