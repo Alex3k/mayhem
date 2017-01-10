@@ -1,115 +1,84 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Mayhem.GUI
 {
     public class WeaponContainer : MonoBehaviour
     {
-        public GameObject WeaponIconPrefab;
-        private Weaponary.BaseWeapon[] m_AvailableWeapons;
+        public GameObject EMPTY_WEAPON_TILE;
+        private string[] m_WeaponIcons;
 
-        private const int MAX_WEAPON_COUNT = 5;
-        private int m_SelectedWeaponIndex = 1;
- 
+        private List<GameObject> m_ShownWeaponTiles;
+
+        private Entities.WeaponBag m_PlayerAvailableWeapons;
 
         private float m_SwipeZoneStartY = Screen.height / 5;
         private float m_SwipeZoneStartX = Screen.width / 2;
         private RectTransform m_SwipeZone;
 
-        public string WeaponChildName = "WeaponIcon";
-
         void Start()
         {
             m_SwipeZone = transform.FindChild("SwipeZone").GetComponent<RectTransform>();
-            m_AvailableWeapons = new Weaponary.BaseWeapon[] {
-                new Weaponary.Handgun(),
+            m_ShownWeaponTiles = new List<GameObject>();
+
+            m_WeaponIcons = new string[]
+            {
+                new Weaponary.Handgun().IconPath,
+                new Weaponary.MachineGun().IconPath,
+                new Weaponary.MiniGun().IconPath
             };
-
-            for(int i = 0; i < MAX_WEAPON_COUNT; i++)
-            {
-                GameObject weaponTile = Instantiate(WeaponIconPrefab, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
-                weaponTile.transform.SetParent(GetComponentInChildren<VerticalLayoutGroup>().gameObject.transform);
-            }
-        }
-
-        Vector2 startPos;
-        float minSwipeDist = 10f;
-        bool isSwiping = false;
-
-        void handleMobileTouches()
-        {
-            foreach (var touch in UnityEngine.Input.touches)
-            {
-
-                if (RectTransformUtility.RectangleContainsScreenPoint(m_SwipeZone, touch.position) == false)
-                {
-                    continue;
-                }
-
-                if (touch.phase == TouchPhase.Began)
-                {
-                    startPos = touch.position;
-                    isSwiping = true;
-                }
-                else if (touch.phase == TouchPhase.Ended && isSwiping && Mathf.Abs(touch.position.y - startPos.y) > 30)
-                {
-                    var swipeDirection = Mathf.Sign(touch.position.y - startPos.y);
-
-                    GetComponent<Text>().text = swipeDirection.ToString();
-
-                    if (swipeDirection > 0)
-                    {
-                        getNextWeapon();
-                    }
-                    else if (swipeDirection < 0)
-                    {
-                        getPreviousWeapon();
-                    }
-
-                    isSwiping = false;
-
-                }
-            }
         }
 
         void Update()
         {
-//#if MOBILE_INPUT
-//            handleMobileTouches();
-//#endif
-
-//#if !MOBILE_INPUT
-//            for (int i = (int)KeyCode.Alpha1; i < (int)KeyCode.Alpha1 + m_AvailableWeapons.Length; i++)
-//            {
-//                if (UnityEngine.Input.GetKeyDown((KeyCode)i))
-//                {
-//                    selectWeapon(i - (int)KeyCode.Alpha1 + 1); // + 1 Accounts for indexs starting at index of 1
-//                }
-//            }
-//#endif
-
-        }
-
-        private void selectWeapon(int newlySelectedWeapon)
-        {
-            if (newlySelectedWeapon <= MAX_WEAPON_COUNT && newlySelectedWeapon > 0)
+            if (m_PlayerAvailableWeapons == null && PhotonNetwork.inRoom)
             {
-
-                transform.FindChild(WeaponChildName + m_SelectedWeaponIndex).GetComponent<Image>().color = Color.white;
-                m_SelectedWeaponIndex = newlySelectedWeapon;
-
-                transform.FindChild(WeaponChildName + newlySelectedWeapon).GetComponent<Image>().color = Color.red;
+                m_PlayerAvailableWeapons = Entities.Player.FindLocalPlayer().WeaponBag;
+                m_PlayerAvailableWeapons.Changed += M_PlayerAvailableWeapons_Changed;
+                updateWeaponSelection();
             }
         }
 
-        private void getNextWeapon()
+        private void M_PlayerAvailableWeapons_Changed(object sender, System.EventArgs e)
         {
-            selectWeapon(m_SelectedWeaponIndex + 1);
+            updateWeaponSelection();
         }
 
-        private void getPreviousWeapon()
+        private void updateWeaponSelection()
         {
-            selectWeapon(m_SelectedWeaponIndex - 1);
+            // This works but isn't pretty.
+            // The next step is instead of replacing shown weapon tiles every time, update it to check if it contains ones that arent in the players bag any more
+            // If they are notin the bag, delete them from shown weapon tiles
+            // if there are new ones, addthem toshown weapon tiles
+            m_ShownWeaponTiles.ForEach(m => Destroy(m));
+            m_ShownWeaponTiles.Clear();
+
+            for (int j = 0; j < m_WeaponIcons.Length; j++)
+            {
+                for (int i = 0; i < m_PlayerAvailableWeapons.Weapons.Length; i++)
+                {
+                    if (m_PlayerAvailableWeapons.Weapons[i].IconPath == m_WeaponIcons[j])
+                    {
+                        GameObject weaponTile = Instantiate(EMPTY_WEAPON_TILE, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+                        weaponTile.GetComponent<Image>().sprite = Resources.Load<Sprite>(m_WeaponIcons[j]);
+
+                        weaponTile.SetActive(true);
+                        weaponTile.transform.SetParent(GetComponentInChildren<VerticalLayoutGroup>().gameObject.transform);
+                        m_ShownWeaponTiles.Add(weaponTile);
+                    }
+                }
+            }
+
+            for(int i = m_ShownWeaponTiles.Count; i < 5; i++)
+            {
+                GameObject weaponTile = Instantiate(EMPTY_WEAPON_TILE, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
+
+                weaponTile.SetActive(true);
+                weaponTile.transform.SetParent(GetComponentInChildren<VerticalLayoutGroup>().gameObject.transform);
+                m_ShownWeaponTiles.Add(weaponTile);
+            }
         }
     }
 }

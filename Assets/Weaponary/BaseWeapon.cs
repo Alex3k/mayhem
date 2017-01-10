@@ -15,7 +15,17 @@ namespace Mayhem.Weaponary
         private double m_LastFireTime;
         private double m_ReloadStartTime;
 
-        public BaseWeapon(float clipSize, float fireRate, float reloadTime, float halfScatterRadius)
+        private string m_IconPath;
+
+        public string IconPath
+        {
+            get
+            {
+                return m_IconPath;
+            }
+        }
+
+        public BaseWeapon(float clipSize, float fireRate, float reloadTime, float halfScatterRadius, string iconPath)
         {
             m_IsReloading = false;
             FireRate = fireRate;
@@ -23,6 +33,7 @@ namespace Mayhem.Weaponary
             ReloadTime = reloadTime;
             m_CurrentAmmoInClip = clipSize;
             HalfScatterRadius = halfScatterRadius;
+            m_IconPath = iconPath;
         }
 
         public void Shoot(Vector3 carrierPosition, Vector3 carrierAngle)
