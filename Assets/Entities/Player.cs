@@ -9,12 +9,12 @@ namespace Mayhem.Entities
         public float RotateSpeed = 5f;
 
         PhotonView m_PhotonView;
-        private Weapon gun;
+        private BaseWeapon gun;
 
         void Awake()
         {
             m_PhotonView = GetComponent<PhotonView>();
-            gun = new Weapon(100, 0.1f, 1);
+            gun = new Handgun();
         }
 
         void FixedUpdate()
