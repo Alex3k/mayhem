@@ -28,6 +28,8 @@ namespace Mayhem.Weaponary
         {
             m_Weapons = new List<BaseWeapon>();
             m_Weapons.Add(new Handgun());
+            m_Weapons.Add(new MiniGun());
+            m_Weapons.Add(new MachineGun());
             m_SelectedWeaponIndex = 0;
         }
 
@@ -47,10 +49,30 @@ namespace Mayhem.Weaponary
             Changed(null, new EventArgs());
         }
 
-        public void ChangeWeapon(int index)
+        public bool ChangeWeaponToIndex(int index)
         {
+            if( index < 0 || index > m_Weapons.Count)
+            {
+                return false;
+            }
             m_SelectedWeaponIndex = index;
+            return true;
+        }
+
+        public void ChangeToNextWeaponInBag()
+        {
+            if (m_SelectedWeaponIndex + 1 < m_Weapons.Count)
+            {
+                m_SelectedWeaponIndex++;
+            }
+        }
+
+        public void ChangeToPreviousWeaponInBag()
+        {
+            if (m_SelectedWeaponIndex - 1 >= 0)
+            {
+                m_SelectedWeaponIndex--;
+            }
         }
     }
-
 }

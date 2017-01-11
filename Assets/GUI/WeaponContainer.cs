@@ -12,8 +12,12 @@ namespace Mayhem.GUI
         private List<GameObject> m_ShownWeaponTiles;
 
         private WeaponBag m_PlayerAvailableWeapons;
-        
+
         private RectTransform m_SwipeZone;
+
+        private Vector2 m_SwipeStartPosition;
+        private float m_SwipeMinimumRegistrationDistance = 30f;
+        private bool m_IsSwiping = false;
 
         void Start()
         {
@@ -23,20 +27,114 @@ namespace Mayhem.GUI
 
         void Update()
         {
-            if (m_PlayerAvailableWeapons == null && PhotonNetwork.inRoom)
+            if (PhotonNetwork.inRoom)
             {
-                m_PlayerAvailableWeapons = Entities.Player.FindLocalPlayer().WeaponBag;
-                m_PlayerAvailableWeapons.Changed += m_PlayerAvailableWeapons_Changed;
-                updateWeaponSelection();
+                if (m_PlayerAvailableWeapons == null)
+                {
+                    m_PlayerAvailableWeapons = Entities.Player.FindLocalPlayer().WeaponBag;
+                    m_PlayerAvailableWeapons.Changed += m_PlayerAvailableWeapons_Changed;
+                    updateWeaponIcons();
+                    setSelectedWeaponIcon();
+                }
+                if(Application.isMobilePlatform)
+                {
+                    handleMobileInput();
+                }
+                else
+                {
+                    handleDesktopInput();
+                }
             }
+        }
+
+        void handleMobileInput()
+        {
+            foreach (var touch in UnityEngine.Input.touches)
+            {
+                if (RectTransformUtility.RectangleContainsScreenPoint(m_SwipeZone, touch.position) == false)
+                {
+                    continue;
+                }
+
+                if (touch.phase == TouchPhase.Began)
+                {
+                    m_SwipeStartPosition = touch.position;
+                    m_IsSwiping = true;
+                }
+                else if (touch.phase == TouchPhase.Ended && m_IsSwiping && Mathf.Abs(touch.position.y - m_SwipeStartPosition.y) > m_SwipeMinimumRegistrationDistance)
+                {
+                    var swipeDirection = Mathf.Sign(touch.position.y - m_SwipeStartPosition.y);
+
+                    if (swipeDirection > 0)
+                    {
+                        getPreviousWeapon();
+                    }
+                    else if (swipeDirection < 0)
+                    {
+                        getNextWeapon();
+                    }
+
+                    m_IsSwiping = false;
+                }
+                //else
+                //{
+                //    m_IsSwiping = false;
+                //}
+            }
+        }
+
+        private void handleDesktopInput()
+        {
+            for (int i = (int)KeyCode.Alpha1; i < (int)KeyCode.Alpha1 + m_PlayerAvailableWeapons.Weapons.Length; i++)
+            {
+                if (UnityEngine.Input.GetKeyDown((KeyCode)i))
+                {
+                    bool validWeaponChange = m_PlayerAvailableWeapons.ChangeWeaponToIndex(i - (int)KeyCode.Alpha1); // (int)KeyCode.Alpha1 is subtracted as the keycodes start at 49. Subtracting gives a number starting at 0
+                    if (validWeaponChange)
+                    {
+                        setSelectedWeaponIcon();
+                    }
+                }
+            }
+        }
+
+        private void setSelectedWeaponIcon()
+        {
+            string selectedIcon = m_PlayerAvailableWeapons.GetCurrentSelectedWeapon().IconPath;
+
+            GetComponent<Text>().text = selectedIcon;
+
+            for (int i = 0; i < m_ShownWeaponTiles.Count; i++)
+            {
+                if (m_ShownWeaponTiles[i].GetComponent<Image>().sprite.name.Equals(selectedIcon))
+                {
+                    m_ShownWeaponTiles[i].GetComponent<Image>().color = Color.red;
+                }
+                else
+                {
+                    m_ShownWeaponTiles[i].GetComponent<Image>().color = Color.white;
+                }
+            }
+        }
+
+        private void getNextWeapon()
+        {
+            m_PlayerAvailableWeapons.ChangeToNextWeaponInBag();
+            setSelectedWeaponIcon();
+        }
+
+        private void getPreviousWeapon()
+        {
+            m_PlayerAvailableWeapons.ChangeToPreviousWeaponInBag();
+            setSelectedWeaponIcon();
         }
 
         private void m_PlayerAvailableWeapons_Changed(object sender, System.EventArgs e)
         {
-            updateWeaponSelection();
+            updateWeaponIcons();
         }
 
-        private void updateWeaponSelection()
+        private void updateWeaponIcons()
         {
             m_ShownWeaponTiles.ForEach(m => Destroy(m));
             m_ShownWeaponTiles.Clear();
