@@ -12,9 +12,7 @@ namespace Mayhem.GUI
         private List<GameObject> m_ShownWeaponTiles;
 
         private WeaponBag m_PlayerAvailableWeapons;
-
-        private float m_SwipeZoneStartY = Screen.height / 5;
-        private float m_SwipeZoneStartX = Screen.width / 2;
+        
         private RectTransform m_SwipeZone;
 
         void Start()
@@ -28,12 +26,12 @@ namespace Mayhem.GUI
             if (m_PlayerAvailableWeapons == null && PhotonNetwork.inRoom)
             {
                 m_PlayerAvailableWeapons = Entities.Player.FindLocalPlayer().WeaponBag;
-                m_PlayerAvailableWeapons.Changed += M_PlayerAvailableWeapons_Changed;
+                m_PlayerAvailableWeapons.Changed += m_PlayerAvailableWeapons_Changed;
                 updateWeaponSelection();
             }
         }
 
-        private void M_PlayerAvailableWeapons_Changed(object sender, System.EventArgs e)
+        private void m_PlayerAvailableWeapons_Changed(object sender, System.EventArgs e)
         {
             updateWeaponSelection();
         }
@@ -55,7 +53,7 @@ namespace Mayhem.GUI
                 m_ShownWeaponTiles.Add(weaponTile);
             }
 
-            // Add empty tiles 
+            // Add empty tiles as padding
             for (int i = m_ShownWeaponTiles.Count; i < Weaponary.WeaponBag.MAX_WEAPON_COUNT; i++)
             {
                 GameObject weaponTile = Instantiate(EMPTY_WEAPON_TILE, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;

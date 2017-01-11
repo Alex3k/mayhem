@@ -12,7 +12,7 @@ namespace Mayhem.Entities
 
         PhotonView m_PhotonView;
 
-        public WeaponBag WeaponBag;
+        public WeaponBag WeaponBag { get; private set; }
 
         void Awake()
         {
