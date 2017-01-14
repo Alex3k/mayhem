@@ -39,7 +39,7 @@ namespace Mayhem.Entities
             {
                 float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
 
-                WeaponBag.GetCurrentSelectedWeapon().Shoot(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
+                WeaponBag.GetCurrentSelectedWeapon().FireHandler(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
             }
         }
 

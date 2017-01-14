@@ -29,7 +29,7 @@ namespace Mayhem.Weaponary
             m_Weapons = new List<BaseWeapon>();
             m_Weapons.Add(new Handgun());
             m_Weapons.Add(new MiniGun());
-            m_Weapons.Add(new MachineGun());
+            m_Weapons.Add(new Shotgun());
             m_SelectedWeaponIndex = 0;
         }
 

@@ -36,7 +36,7 @@ namespace Mayhem.Weaponary
             m_IconPath = iconPath;
         }
 
-        public void Shoot(Vector3 carrierPosition, Vector3 carrierAngle)
+        public void FireHandler(Vector3 carrierPosition, Vector3 carrierAngle)
         {
             if (isReloading())
             {
@@ -51,12 +51,17 @@ namespace Mayhem.Weaponary
                 }
                 else
                 {
-                    carrierAngle.z = Random.Range(carrierAngle.z - HalfScatterRadius, carrierAngle.z + HalfScatterRadius);
-                    PhotonNetwork.Instantiate("Bullet", carrierPosition, Quaternion.Euler(carrierAngle), 0);
+                    FireBullet(carrierPosition, carrierAngle);
                     m_CurrentAmmoInClip--;
                     m_LastFireTime = PhotonNetwork.time;
                 }
             }
+        }
+
+        protected virtual void FireBullet(Vector3 carrierPosition, Vector3 carrierAngle)
+        {
+            carrierAngle.z = Random.Range(carrierAngle.z - HalfScatterRadius, carrierAngle.z + HalfScatterRadius);
+            PhotonNetwork.Instantiate("Bullet", carrierPosition, Quaternion.Euler(carrierAngle), 0);
         }
 
         private bool isReloading()
