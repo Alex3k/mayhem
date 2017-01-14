@@ -7,7 +7,7 @@ namespace Mayhem.Weaponary
 {
     public class WeaponBag
     {
-        public const int MAX_WEAPON_COUNT = 5;
+        public const int MAX_WEAPON_COUNT = 3;
 
         public BaseWeapon[] Weapons
         {
@@ -57,22 +57,6 @@ namespace Mayhem.Weaponary
             }
             m_SelectedWeaponIndex = index;
             return true;
-        }
-
-        public void ChangeToNextWeaponInBag()
-        {
-            if (m_SelectedWeaponIndex + 1 < m_Weapons.Count)
-            {
-                m_SelectedWeaponIndex++;
-            }
-        }
-
-        public void ChangeToPreviousWeaponInBag()
-        {
-            if (m_SelectedWeaponIndex - 1 >= 0)
-            {
-                m_SelectedWeaponIndex--;
-            }
         }
     }
 }

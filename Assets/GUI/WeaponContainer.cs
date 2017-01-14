@@ -56,30 +56,21 @@ namespace Mayhem.GUI
                     continue;
                 }
 
-                if (touch.phase == TouchPhase.Began)
+                if (touch.phase == TouchPhase.Ended)
                 {
-                    m_SwipeStartPosition = touch.position;
-                    m_IsSwiping = true;
-                }
-                else if (touch.phase == TouchPhase.Ended && m_IsSwiping && Mathf.Abs(touch.position.y - m_SwipeStartPosition.y) > m_SwipeMinimumRegistrationDistance)
-                {
-                    var swipeDirection = Mathf.Sign(touch.position.y - m_SwipeStartPosition.y);
-
-                    if (swipeDirection > 0)
+                    for(int i = 0; i < m_ShownWeaponTiles.Count; i++)
                     {
-                        getPreviousWeapon();
+                        if (RectTransformUtility.RectangleContainsScreenPoint(m_ShownWeaponTiles[i].GetComponent<RectTransform>(), touch.position))
+                        {
+                            bool validWeaponChange = m_PlayerAvailableWeapons.ChangeWeaponToIndex(i); 
+                            if (validWeaponChange)
+                            {
+                                setSelectedWeaponIcon();
+                            }
+                            break;
+                        }
                     }
-                    else if (swipeDirection < 0)
-                    {
-                        getNextWeapon();
-                    }
-
-                    m_IsSwiping = false;
                 }
-                //else
-                //{
-                //    m_IsSwiping = false;
-                //}
             }
         }
 
@@ -115,18 +106,6 @@ namespace Mayhem.GUI
                     m_ShownWeaponTiles[i].GetComponent<Image>().color = Color.white;
                 }
             }
-        }
-
-        private void getNextWeapon()
-        {
-            m_PlayerAvailableWeapons.ChangeToNextWeaponInBag();
-            setSelectedWeaponIcon();
-        }
-
-        private void getPreviousWeapon()
-        {
-            m_PlayerAvailableWeapons.ChangeToPreviousWeaponInBag();
-            setSelectedWeaponIcon();
         }
 
         private void m_PlayerAvailableWeapons_Changed(object sender, System.EventArgs e)
