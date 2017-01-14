@@ -1,4 +1,6 @@
 ﻿using Mayhem.Weaponary;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mayhem.Entities
@@ -9,12 +11,13 @@ namespace Mayhem.Entities
         public float RotateSpeed = 5f;
 
         PhotonView m_PhotonView;
-        private Weapon gun;
+
+        public WeaponBag WeaponBag { get; private set; }
 
         void Awake()
         {
             m_PhotonView = GetComponent<PhotonView>();
-            gun = new Weapon(100, 0.1f, 1);
+            WeaponBag = new WeaponBag();
         }
 
         void FixedUpdate()
@@ -36,7 +39,7 @@ namespace Mayhem.Entities
             {
                 float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
 
-                gun.Shoot(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
+                WeaponBag.GetCurrentSelectedWeapon().FireHandler(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
             }
         }
 
@@ -47,6 +50,22 @@ namespace Mayhem.Entities
 
             float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+
+        public static Player FindLocalPlayer()
+        {
+            var players = GameObject.FindGameObjectsWithTag("Player");
+            foreach (GameObject player in players)
+            {
+                string playerLoopId = player.GetComponent<PhotonView>().owner.UserId;
+
+                if (playerLoopId.Equals(PhotonNetwork.player.UserId))
+                {
+                    return player.GetComponent<Player>();
+                }
+            }
+
+            throw new Exception("No player found somehow...");
         }
     }
 }
