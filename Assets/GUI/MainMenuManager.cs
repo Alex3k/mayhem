@@ -80,6 +80,7 @@ namespace Mayhem.GUI
             MainMenu.gameObject.SetActive(true);
             JoinFriendsGameMenu.gameObject.SetActive(false);
             ErrorMessage.gameObject.SetActive(false);
+            FriendID.text = "";
 
         }
 
