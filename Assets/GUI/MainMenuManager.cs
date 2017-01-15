@@ -11,6 +11,8 @@ namespace Mayhem.GUI
         public Text PlayerNickName;
         public Text FriendID;
 
+        public Text ErrorMessage;
+
         public Transform MainMenu;
         public Transform JoinFriendsGameMenu;
 
@@ -20,6 +22,7 @@ namespace Mayhem.GUI
             m_LoadingSceneOperation.allowSceneActivation = false;
             MainMenu.gameObject.SetActive(true);
             JoinFriendsGameMenu.gameObject.SetActive(false);
+            ErrorMessage.gameObject.SetActive(false);
         }
 
         void Update()
@@ -50,15 +53,34 @@ namespace Mayhem.GUI
         {
             if(PhotonNetwork.Friends.Count > 0)
             {
-                Debug.Log("Is In Room: " + PhotonNetwork.Friends[0].IsInRoom);
-                Debug.Log("Is Online: " + PhotonNetwork.Friends[0].IsOnline);
-                Debug.Log("Name: " + PhotonNetwork.Friends[0].Name);
-                
-                Core.SettingsFromMainMenu.PlayerNickName = PlayerNickName.text;
-                Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.FriendsGame;
-                Core.SettingsFromMainMenu.RoomToJoin = PhotonNetwork.Friends[0].Room;
-                m_LoadingSceneOperation.allowSceneActivation = true;
+                if (PhotonNetwork.Friends[0].IsInRoom)
+                {
+                    ErrorMessage.gameObject.SetActive(false);
+                    Core.SettingsFromMainMenu.PlayerNickName = PlayerNickName.text;
+                    Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.FriendsGame;
+                    Core.SettingsFromMainMenu.RoomToJoin = PhotonNetwork.Friends[0].Room;
+                    m_LoadingSceneOperation.allowSceneActivation = true;
+                }
+                else if (PhotonNetwork.Friends[0].IsOnline)
+                {
+                    ErrorMessage.text = "Your friend is not in a game.";
+                    ErrorMessage.gameObject.SetActive(true);
+                }
+                else if (!PhotonNetwork.Friends[0].IsOnline)
+                {
+                    ErrorMessage.text = "Your friend is not online.";
+                    ErrorMessage.gameObject.SetActive(true);
+                }
+
             }
+        }
+
+        public void ShowMainMenu()
+        {
+            MainMenu.gameObject.SetActive(true);
+            JoinFriendsGameMenu.gameObject.SetActive(false);
+            ErrorMessage.gameObject.SetActive(false);
+
         }
 
     }
