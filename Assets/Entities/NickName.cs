@@ -5,6 +5,8 @@ namespace Mayhem.Entities
     public class NickName : MonoBehaviour
     {
         Quaternion rotation;
+        private string m_NickName;
+
         void Awake()
         {
             rotation = transform.rotation;
@@ -17,7 +19,21 @@ namespace Mayhem.Entities
 
         public void SetNickName(string name)
         {
+            m_NickName = name;
             GetComponent<TextMesh>().text = name;
+        }
+
+        void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        {
+            if (stream.isWriting)
+            {
+                stream.SendNext(m_NickName);
+
+            }
+            else
+            {
+                SetNickName((string)stream.ReceiveNext());
+            }
         }
     }
 }
