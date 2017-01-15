@@ -6,15 +6,33 @@ namespace Mayhem.GUI
 {
     public class MainMenuManager : Photon.PunBehaviour
     {
+        private enum Menu
+        {
+            MainMenu,
+            JoinFriendsMenu,
+            CreatePrivateGame,
+            JoinPrivateGame
+        }
+
         public int MainGameScene = 1;
         private AsyncOperation m_LoadingSceneOperation;
         public InputField PlayerNickName;
         public Text FriendID;
 
+        public InputField CreatePrivateRoomName;
+        public InputField CreatePrivateRoomPassword;
+
+        public InputField JoinPrivateRoomName;
+        public InputField JoinPrivateRoomPassword;
+
         public Text ErrorMessage;
 
         public Transform MainMenu;
         public Transform JoinFriendsGameMenu;
+        public Transform CreatePrivateGameMenu;
+        public Transform JoinPrivateGameMenu;
+
+        private Menu m_CurrentMenu;
 
         void Start()
         {
@@ -26,8 +44,34 @@ namespace Mayhem.GUI
             PlayerNickName.text = Core.RandomNameGenerator.GetName();
         }
 
-        void Update()
+        private void changeMenu(Menu newMenu)
         {
+            MainMenu.gameObject.SetActive(false);
+            JoinFriendsGameMenu.gameObject.SetActive(false);
+            CreatePrivateGameMenu.gameObject.SetActive(false);
+            JoinPrivateGameMenu.gameObject.SetActive(false);
+
+            ErrorMessage.gameObject.SetActive(false);
+            FriendID.text = "";
+
+            m_CurrentMenu = newMenu;
+
+            if (newMenu == Menu.CreatePrivateGame)
+            {
+                CreatePrivateGameMenu.gameObject.SetActive(true);
+            }
+            else if(newMenu == Menu.JoinFriendsMenu)
+            {
+                JoinFriendsGameMenu.gameObject.SetActive(true);
+            }
+            else if(newMenu == Menu.MainMenu)
+            {
+                MainMenu.gameObject.SetActive(true);
+            }
+            else if(newMenu == Menu.JoinPrivateGame)
+            {
+                JoinPrivateGameMenu.gameObject.SetActive(true);
+            }
         }
 
         public void ChangeToJoinRandomGame()
@@ -36,13 +80,21 @@ namespace Mayhem.GUI
             Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.RandomGame;
             Core.SettingsFromMainMenu.RoomToJoin = null;
             m_LoadingSceneOperation.allowSceneActivation = true;
-
         }
 
         public void ChangeToJoinFriendsGameMenu()
         {
-            MainMenu.gameObject.SetActive(false);
-            JoinFriendsGameMenu.gameObject.SetActive(true);
+            changeMenu(Menu.JoinFriendsMenu);
+        }
+
+        public void ChangeToJoinPrivateGameMenu()
+        {
+            changeMenu(Menu.JoinPrivateGame);
+        }
+
+        public void ChangeToCreatePrivateGameMenu()
+        {
+            changeMenu(Menu.CreatePrivateGame);
         }
 
         public void JoinFriendsGame()
@@ -72,18 +124,29 @@ namespace Mayhem.GUI
                     ErrorMessage.text = "Your friend is not online.";
                     ErrorMessage.gameObject.SetActive(true);
                 }
-
             }
         }
 
         public void ShowMainMenu()
         {
-            MainMenu.gameObject.SetActive(true);
-            JoinFriendsGameMenu.gameObject.SetActive(false);
-            ErrorMessage.gameObject.SetActive(false);
-            FriendID.text = "";
-
+            changeMenu(Menu.MainMenu);
         }
 
+        public void CreateJoinPrivateRoom()
+        {
+            if (m_CurrentMenu == Menu.JoinPrivateGame)
+            {
+                Core.SettingsFromMainMenu.RoomToJoin = JoinPrivateRoomName.text;
+                Core.SettingsFromMainMenu.RoomPassword = JoinPrivateRoomPassword.text;
+            }
+            else if (m_CurrentMenu == Menu.CreatePrivateGame)
+            {
+                Core.SettingsFromMainMenu.RoomToJoin = CreatePrivateRoomName.text;
+                Core.SettingsFromMainMenu.RoomPassword = CreatePrivateRoomPassword.text;
+            }
+
+            Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.PrivateGame;
+            m_LoadingSceneOperation.allowSceneActivation = true;
+        }
     }
 }

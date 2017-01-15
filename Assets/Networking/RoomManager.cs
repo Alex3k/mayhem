@@ -27,6 +27,16 @@ namespace Mayhem.Networking
             {
                 PhotonNetwork.JoinRoom(Core.SettingsFromMainMenu.RoomToJoin);
             }
+            else if(Core.SettingsFromMainMenu.SpecifiedGameMode == Core.GameMode.PrivateGame)
+            {
+                RoomOptions options = new RoomOptions();
+
+                options.CustomRoomProperties = new ExitGames.Client.Photon.Hashtable();
+
+                options.CustomRoomProperties.Add("password", Core.SettingsFromMainMenu.RoomPassword);
+
+                PhotonNetwork.JoinOrCreateRoom(Core.SettingsFromMainMenu.RoomToJoin, options, null); 
+            }
         }
 
         void Update()
@@ -61,17 +71,25 @@ namespace Mayhem.Networking
 
         public override void OnJoinedRoom()
         {
-            PhotonNetwork.player.UserId = PhotonNetwork.AuthValues.UserId;
+            if (PhotonNetwork.room.CustomProperties["password"].Equals(Core.SettingsFromMainMenu.RoomPassword))
+            {
+                PhotonNetwork.player.UserId = PhotonNetwork.AuthValues.UserId;
 
-            GameObject.Find("LoadingUI").SetActive(false);
-            GameObject.Find("GameUI").SetActive(true);
+                GameObject.Find("LoadingUI").SetActive(false);
+                GameObject.Find("GameUI").SetActive(true);
 
-            GameObject player = PhotonNetwork.Instantiate("Sprite", Vector3.zero, Quaternion.identity, 0);
-            GameObject.Find("Main Camera").AddComponent<Camera2DFollow>().target = player.transform;
-            PhotonNetwork.player.NickName = Core.SettingsFromMainMenu.PlayerNickName;
-            player.GetComponent<Mayhem.Entities.Player>().SetNickname(PhotonNetwork.player.NickName);
+                GameObject player = PhotonNetwork.Instantiate("Sprite", Vector3.zero, Quaternion.identity, 0);
+                GameObject.Find("Main Camera").AddComponent<Camera2DFollow>().target = player.transform;
+                PhotonNetwork.player.NickName = Core.SettingsFromMainMenu.PlayerNickName;
+                player.GetComponent<Mayhem.Entities.Player>().SetNickname(PhotonNetwork.player.NickName);
 
-            RoomNameLabel.text = "Your ID: " + PhotonNetwork.player.UserId;
+                RoomNameLabel.text = "Your ID: " + PhotonNetwork.player.UserId;
+            }
+            else
+            {
+                SetErrorMessage("Invalid Room Password");
+                PhotonNetwork.LeaveRoom();
+            }
         }
 
         public void ReturnToMainMenu()
