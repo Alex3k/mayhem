@@ -12,6 +12,8 @@ namespace Mayhem.Networking
 
         void Start()
         {
+            PhotonNetwork.AuthValues = new AuthenticationValues(((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) + new System.Random(DateTime.Now.Millisecond).Next(3912)).ToString());
+           
             PhotonNetwork.ConnectUsingSettings("0.1");
         }
 

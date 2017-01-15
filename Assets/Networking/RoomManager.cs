@@ -23,13 +23,13 @@ namespace Mayhem.Networking
         public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
         {
             Debug.Log("Can't join random room! Creating New Room!");
-            PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = 10, PublishUserId=true }, null);
-            
+            PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = 10, PublishUserId = true }, null);
+
         }
 
         public override void OnJoinedRoom()
         {
-            PhotonNetwork.player.UserId = ((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) + new System.Random(DateTime.Now.Millisecond).Next(3912)).ToString();
+            PhotonNetwork.player.UserId = PhotonNetwork.AuthValues.UserId;
 
             GameObject.Find("LoadingUI").SetActive(false);
             GameObject.Find("GameUI").SetActive(true);
@@ -38,6 +38,7 @@ namespace Mayhem.Networking
             GameObject.Find("Main Camera").AddComponent<Camera2DFollow>().target = player.transform;
             PhotonNetwork.player.NickName = Core.SettingsFromMainMenu.PlayerNickName;
             player.GetComponent<Mayhem.Entities.Player>().SetNickname(PhotonNetwork.player.NickName);
+
             RoomNameLabel.text = "Your ID: " + PhotonNetwork.player.UserId;
         }
     }
