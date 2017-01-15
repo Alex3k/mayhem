@@ -12,7 +12,14 @@ namespace Mayhem.Networking
 
         void Awake()
         {
-            PhotonNetwork.JoinRandomRoom();
+            if (Core.SettingsFromMainMenu.SpecifiedGameMode == Core.GameMode.RandomGame)
+            {
+                PhotonNetwork.JoinRandomRoom();
+            }
+            else if(Core.SettingsFromMainMenu.SpecifiedGameMode == Core.GameMode.FriendsGame)
+            {
+                PhotonNetwork.JoinRoom(Core.SettingsFromMainMenu.RoomToJoin);
+            }
         }
 
         void Update()
@@ -24,7 +31,6 @@ namespace Mayhem.Networking
         {
             Debug.Log("Can't join random room! Creating New Room!");
             PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = 10, PublishUserId = true }, null);
-
         }
 
         public override void OnJoinedRoom()

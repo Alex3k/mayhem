@@ -15,5 +15,6 @@ namespace Mayhem.Core
     {
         public static string PlayerNickName;
         public static GameMode SpecifiedGameMode;
+        public static string RoomToJoin;
     }
 }

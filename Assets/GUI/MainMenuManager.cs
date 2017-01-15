@@ -29,8 +29,10 @@ namespace Mayhem.GUI
         public void ChangeToJoinRandomGame()
         {
             Core.SettingsFromMainMenu.PlayerNickName = PlayerNickName.text;
-            m_LoadingSceneOperation.allowSceneActivation = true;
             Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.RandomGame;
+            Core.SettingsFromMainMenu.RoomToJoin = null;
+            m_LoadingSceneOperation.allowSceneActivation = true;
+
         }
 
         public void ChangeToJoinFriendsGameMenu()
@@ -41,20 +43,22 @@ namespace Mayhem.GUI
 
         public void JoinFriendsGame()
         {
-            string friend = FriendID.text;
-            Debug.Log(friend);
-            Debug.Log(PhotonNetwork.FindFriends(new string[1] { friend }));
-
+            Debug.Log(PhotonNetwork.FindFriends(new string[1] { FriendID.text }));
         }
 
         public override void OnUpdatedFriendList()
         {
-            string friend = FriendID.text;
-
-            Debug.Log("Is In Room: " + PhotonNetwork.Friends[0].IsInRoom);
-            Debug.Log("Is Online: " + PhotonNetwork.Friends[0].IsOnline);
-            Debug.Log("Name: " + PhotonNetwork.Friends[0].Room);
-
+            if(PhotonNetwork.Friends.Count > 0)
+            {
+                Debug.Log("Is In Room: " + PhotonNetwork.Friends[0].IsInRoom);
+                Debug.Log("Is Online: " + PhotonNetwork.Friends[0].IsOnline);
+                Debug.Log("Name: " + PhotonNetwork.Friends[0].Name);
+                
+                Core.SettingsFromMainMenu.PlayerNickName = PlayerNickName.text;
+                Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.RandomGame;
+                Core.SettingsFromMainMenu.RoomToJoin = PhotonNetwork.Friends[0].Room;
+                m_LoadingSceneOperation.allowSceneActivation = true;
+            }
         }
 
     }
