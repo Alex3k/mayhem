@@ -44,6 +44,7 @@ namespace Mayhem.Networking
             ReturnToMainMenuButton.gameObject.SetActive(true);
             LoadingTitle.gameObject.SetActive(false);
         }
+
         public override void OnPhotonJoinRoomFailed(object[] codeAndMsg)
         {
             if (codeAndMsg[0].ToString().Equals("32765"))
@@ -55,7 +56,7 @@ namespace Mayhem.Networking
         public override void OnPhotonRandomJoinFailed(object[] codeAndMsg)
         {
             Debug.Log("Can't join random room! Creating New Room!");
-            PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = 1, PublishUserId = true }, null);
+            PhotonNetwork.CreateRoom(null, new RoomOptions() { MaxPlayers = 10, PublishUserId = true }, null);
         }
 
         public override void OnJoinedRoom()
