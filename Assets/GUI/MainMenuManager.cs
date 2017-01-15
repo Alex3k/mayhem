@@ -8,7 +8,7 @@ namespace Mayhem.GUI
     {
         public int MainGameScene = 1;
         private AsyncOperation m_LoadingSceneOperation;
-        public Text PlayerNickName;
+        public InputField PlayerNickName;
         public Text FriendID;
 
         public Text ErrorMessage;
@@ -23,6 +23,7 @@ namespace Mayhem.GUI
             MainMenu.gameObject.SetActive(true);
             JoinFriendsGameMenu.gameObject.SetActive(false);
             ErrorMessage.gameObject.SetActive(false);
+            PlayerNickName.text = Core.RandomNameGenerator.GetName();
         }
 
         void Update()
