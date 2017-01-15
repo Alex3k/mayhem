@@ -12,7 +12,7 @@ namespace Mayhem.Networking
 
         void Awake()
         {
-            PhotonNetwork.AuthValues = new AuthenticationValues(((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) + new System.Random(DateTime.Now.Millisecond).Next(3912)).ToString());
+            PhotonNetwork.AuthValues = new AuthenticationValues(Core.RandomIDGenerator.GenerateID());
            
             PhotonNetwork.ConnectUsingSettings("0.1");
         }
