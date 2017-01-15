@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace Mayhem.GUI
 {
@@ -7,6 +8,7 @@ namespace Mayhem.GUI
     {
         public int MainGameScene = 1;
         private AsyncOperation m_LoadingSceneOperation;
+        public Text PlayerNickName;
 
         void Start()
         {
@@ -20,6 +22,7 @@ namespace Mayhem.GUI
 
         public void ChangeToLoadingScene()
         {
+            Core.SettingsFromMainMenu.PlayerNickName = PlayerNickName.text;
             m_LoadingSceneOperation.allowSceneActivation = true;
         }
     }

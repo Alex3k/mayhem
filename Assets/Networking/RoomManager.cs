@@ -36,7 +36,7 @@ namespace Mayhem.Networking
 
             GameObject player = PhotonNetwork.Instantiate("Sprite", Vector3.zero, Quaternion.identity, 0);
             GameObject.Find("Main Camera").AddComponent<Camera2DFollow>().target = player.transform;
-            PhotonNetwork.player.NickName = "Clarence";
+            PhotonNetwork.player.NickName = Core.SettingsFromMainMenu.PlayerNickName;
             player.GetComponent<Mayhem.Entities.Player>().SetNickname(PhotonNetwork.player.NickName);
             RoomNameLabel.text = "Your ID: " + PhotonNetwork.player.UserId;
         }
