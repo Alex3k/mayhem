@@ -5,13 +5,12 @@ namespace Mayhem.GUI
 {
     public class MainMenuManager : MonoBehaviour
     {
-        public int LoadingScene = 1;
-        public int MainGameScene = 2;
+        public int MainGameScene = 1;
         private AsyncOperation m_LoadingSceneOperation;
 
         void Start()
         {
-            m_LoadingSceneOperation = SceneManager.LoadSceneAsync(LoadingScene, LoadSceneMode.Single);
+            m_LoadingSceneOperation = SceneManager.LoadSceneAsync(MainGameScene, LoadSceneMode.Single);
             m_LoadingSceneOperation.allowSceneActivation = false;
         }
 
