@@ -10,7 +10,7 @@ namespace Mayhem.Networking
     {
         public Text ConnectionState;
 
-        void Start()
+        void Awake()
         {
             PhotonNetwork.AuthValues = new AuthenticationValues(((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) + new System.Random(DateTime.Now.Millisecond).Next(3912)).ToString());
            

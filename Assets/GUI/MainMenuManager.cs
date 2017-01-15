@@ -55,7 +55,7 @@ namespace Mayhem.GUI
                 Debug.Log("Name: " + PhotonNetwork.Friends[0].Name);
                 
                 Core.SettingsFromMainMenu.PlayerNickName = PlayerNickName.text;
-                Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.RandomGame;
+                Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.FriendsGame;
                 Core.SettingsFromMainMenu.RoomToJoin = PhotonNetwork.Friends[0].Room;
                 m_LoadingSceneOperation.allowSceneActivation = true;
             }
