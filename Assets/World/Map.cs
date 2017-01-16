@@ -48,6 +48,7 @@ namespace Mayhem.World
 
                     var obj = (GameObject)Instantiate(MapTilePrefab, pos, Quaternion.identity);
                     obj.name = "MapTile(" + pos.ToString() + ")";
+                    obj.transform.SetParent(this.transform);
 
                 }
             }

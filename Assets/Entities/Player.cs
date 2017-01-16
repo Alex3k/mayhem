@@ -67,5 +67,10 @@ namespace Mayhem.Entities
 
             throw new Exception("No player found somehow...");
         }
+
+        public void SetNickname(string name)
+        {
+            GetComponentInChildren<NickName>().SetNickName(name);
+        }
     }
 }

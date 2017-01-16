@@ -93,8 +93,6 @@ namespace Mayhem.GUI
         {
             string selectedIcon = m_PlayerAvailableWeapons.GetCurrentSelectedWeapon().IconPath;
 
-            GetComponent<Text>().text = selectedIcon;
-
             for (int i = 0; i < m_ShownWeaponTiles.Count; i++)
             {
                 if (m_ShownWeaponTiles[i].GetComponent<Image>().sprite.name.Equals(selectedIcon))
