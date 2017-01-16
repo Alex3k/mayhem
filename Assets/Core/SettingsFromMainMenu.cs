@@ -11,6 +11,7 @@ namespace Mayhem.Core
         FriendsGame,
         PrivateGame
     }
+
     public static class SettingsFromMainMenu
     {
         public static string PlayerNickName;

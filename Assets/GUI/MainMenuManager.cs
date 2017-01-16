@@ -25,7 +25,9 @@ namespace Mayhem.GUI
         public InputField JoinPrivateRoomName;
         public InputField JoinPrivateRoomPassword;
 
-        public Text ErrorMessage;
+        public Text JoinFriendsGameErrorMessage;
+        public Text CreatePrivateRoomErrorMessage;
+        public Text JoinPrivateRoomErrorMessage;
 
         public Transform MainMenu;
         public Transform JoinFriendsGameMenu;
@@ -40,7 +42,9 @@ namespace Mayhem.GUI
             m_LoadingSceneOperation.allowSceneActivation = false;
             MainMenu.gameObject.SetActive(true);
             JoinFriendsGameMenu.gameObject.SetActive(false);
-            ErrorMessage.gameObject.SetActive(false);
+            CreatePrivateRoomErrorMessage.gameObject.SetActive(false);
+            JoinFriendsGameErrorMessage.gameObject.SetActive(false);
+            JoinPrivateRoomErrorMessage.gameObject.SetActive(false);
             PlayerNickName.text = Core.RandomNameGenerator.GetName();
         }
 
@@ -51,7 +55,9 @@ namespace Mayhem.GUI
             CreatePrivateGameMenu.gameObject.SetActive(false);
             JoinPrivateGameMenu.gameObject.SetActive(false);
 
-            ErrorMessage.gameObject.SetActive(false);
+            CreatePrivateRoomErrorMessage.gameObject.SetActive(false);
+            JoinFriendsGameErrorMessage.gameObject.SetActive(false);
+            JoinPrivateRoomErrorMessage.gameObject.SetActive(false);
             FriendID.text = "";
 
             m_CurrentMenu = newMenu;
@@ -108,7 +114,7 @@ namespace Mayhem.GUI
             {
                 if (PhotonNetwork.Friends[0].IsInRoom)
                 {
-                    ErrorMessage.gameObject.SetActive(false);
+                    JoinFriendsGameErrorMessage.gameObject.SetActive(false);
                     Core.SettingsFromMainMenu.PlayerNickName = PlayerNickName.text;
                     Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.FriendsGame;
                     Core.SettingsFromMainMenu.RoomToJoin = PhotonNetwork.Friends[0].Room;
@@ -116,13 +122,13 @@ namespace Mayhem.GUI
                 }
                 else if (PhotonNetwork.Friends[0].IsOnline)
                 {
-                    ErrorMessage.text = "Your friend is not in a game.";
-                    ErrorMessage.gameObject.SetActive(true);
+                    JoinFriendsGameErrorMessage.text = "Your friend is not in a game.";
+                    JoinFriendsGameErrorMessage.gameObject.SetActive(true);
                 }
                 else if (!PhotonNetwork.Friends[0].IsOnline)
                 {
-                    ErrorMessage.text = "Your friend is not online.";
-                    ErrorMessage.gameObject.SetActive(true);
+                    JoinFriendsGameErrorMessage.text = "Your friend is not online.";
+                    JoinFriendsGameErrorMessage.gameObject.SetActive(true);
                 }
             }
         }
@@ -132,21 +138,59 @@ namespace Mayhem.GUI
             changeMenu(Menu.MainMenu);
         }
 
+        private bool doesRoomExist(string roomNameToCheck)
+        {
+            var rooms = PhotonNetwork.GetRoomList();
+
+            for (int i = 0; i < rooms.Length; i++)
+            {
+                if (rooms[i].Name.Equals(roomNameToCheck))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public void CreateJoinPrivateRoom()
         {
+            bool errorOccured = false;
+
             if (m_CurrentMenu == Menu.JoinPrivateGame)
             {
-                Core.SettingsFromMainMenu.RoomToJoin = JoinPrivateRoomName.text;
-                Core.SettingsFromMainMenu.RoomPassword = JoinPrivateRoomPassword.text;
+                if (doesRoomExist(JoinPrivateRoomName.text))
+                {
+                    Core.SettingsFromMainMenu.RoomToJoin = JoinPrivateRoomName.text;
+                    Core.SettingsFromMainMenu.RoomPassword = JoinPrivateRoomPassword.text;
+                }
+                else
+                {
+                    errorOccured = true;
+                    JoinPrivateRoomErrorMessage.text = "That room name doesn't exist.";
+                    JoinPrivateRoomErrorMessage.gameObject.SetActive(true);
+                }
             }
             else if (m_CurrentMenu == Menu.CreatePrivateGame)
             {
-                Core.SettingsFromMainMenu.RoomToJoin = CreatePrivateRoomName.text;
-                Core.SettingsFromMainMenu.RoomPassword = CreatePrivateRoomPassword.text;
+                if (doesRoomExist(CreatePrivateRoomName.text))
+                {
+                    errorOccured = true;
+                    CreatePrivateRoomErrorMessage.text = "That room name already exists.";
+                    CreatePrivateRoomErrorMessage.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Core.SettingsFromMainMenu.RoomToJoin = CreatePrivateRoomName.text;
+                    Core.SettingsFromMainMenu.RoomPassword = CreatePrivateRoomPassword.text;
+                }
             }
 
-            Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.PrivateGame;
-            m_LoadingSceneOperation.allowSceneActivation = true;
+            if (errorOccured == false)
+            {
+                Core.SettingsFromMainMenu.SpecifiedGameMode = Core.GameMode.PrivateGame;
+                m_LoadingSceneOperation.allowSceneActivation = true;
+            }
         }
     }
 }
