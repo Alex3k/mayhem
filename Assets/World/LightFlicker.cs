@@ -7,37 +7,50 @@ namespace Mayhem.World
     {
         private Light m_Light;
 
-        private float[] m_Smoothing = new float[20];
-        public float Max;
-        public float Min;
+        private float[] m_IntensitySmoothing = new float[20];
+        private float[] m_RangeSmoothing = new float[20];
+        public float IntensityMax;
+        public float IntensityMin;
+        public float RangeMax;
+        public float RangeMin;
 
         void Start()
         {
-            // Initialize the array.
-            for (int i = 0; i < m_Smoothing.Length; i++)
-            {
-                m_Smoothing[i] = 0.0f;
-            }
             m_Light = GetComponent<Light>();
+
+            for (int i = 0; i < m_IntensitySmoothing.Length; i++)
+            {
+                m_IntensitySmoothing[i] = 0.0f;
+                m_RangeSmoothing[i] = m_Light.range;
+            }
         }
 
         void Update()
         {
-            float sum = 0.0f;
+            float intensitySum = 0.0f;
+            float rangeSum = 0.0f;
 
-            for (int i = 1; i < m_Smoothing.Length; i++)
+            for (int i = 1; i < m_IntensitySmoothing.Length; i++)
             {
-                m_Smoothing[i - 1] = m_Smoothing[i];
-                sum += m_Smoothing[i - 1];
+                m_IntensitySmoothing[i - 1] = m_IntensitySmoothing[i];
+                intensitySum += m_IntensitySmoothing[i - 1];
+
+                m_RangeSmoothing[i - 1] = m_RangeSmoothing[i];
+                rangeSum += m_RangeSmoothing[i - 1];
             }
 
             // Add the new value at the end of the array.
-            m_Smoothing[m_Smoothing.Length - 1] = Random.Range(Min, Max);
-            sum += m_Smoothing[m_Smoothing.Length - 1];
+            m_IntensitySmoothing[m_IntensitySmoothing.Length - 1] = Random.Range(IntensityMin, IntensityMax);
+            intensitySum += m_IntensitySmoothing[m_IntensitySmoothing.Length - 1];
+
+            m_RangeSmoothing[m_RangeSmoothing.Length - 1] = Random.Range(RangeMin, RangeMax);
+            rangeSum += m_RangeSmoothing[m_RangeSmoothing.Length - 1];
 
             // Compute the average of the array and assign it to the
             // light intensity.
-            m_Light.intensity = sum / m_Smoothing.Length;
+            m_Light.intensity = intensitySum / m_IntensitySmoothing.Length;
+
+            m_Light.range = rangeSum / m_RangeSmoothing.Length;
         }
     }
 }
