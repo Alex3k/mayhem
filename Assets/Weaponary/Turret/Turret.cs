@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Mayhem.Weaponary.Turret
 {
     public class Turret : MonoBehaviour
     {
         private Sights m_MySights;
+        private MachineGun m_Gun;
 
         void Awake()
         {
             m_MySights = GetComponentInChildren<Sights>();
+            m_Gun = new MachineGun();
         }
 
         void Update()
@@ -20,7 +18,7 @@ namespace Mayhem.Weaponary.Turret
             if (m_MySights.HasTarget)
             {
                 transform.right = m_MySights.Target - transform.position;
-                Debug.Log("Shooting at " + m_MySights.Target);
+                m_Gun.FireHandler(transform.position, transform.eulerAngles);
             }
         }
     }

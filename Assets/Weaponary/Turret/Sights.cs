@@ -19,14 +19,20 @@ namespace Mayhem.Weaponary.Turret
 
         void OnTriggerStay2D(Collider2D collision)
         {
-            HasTarget = true;
-            Target = collision.gameObject.transform.position;
+            if (collision.gameObject.tag == "Zombie")
+            {
+                HasTarget = true;
+                Target = collision.gameObject.transform.position;
+            }
         }
 
         void OnTriggerExit2D(Collider2D collision)
         {
-            HasTarget = false;
-            Target = Vector3.zero;
+            if (collision.gameObject.tag == "Zombie")
+            {
+                HasTarget = false;
+                Target = Vector3.zero;
+            }
         }
     }
 }
