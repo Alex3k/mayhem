@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using Mayhem.Equipment;
 
-namespace Mayhem.Weaponary
+namespace Mayhem.Equipment.Weaponary
 {
-    public class BaseWeapon
+    public class BaseWeapon : EquipmentItem
     {
         public float FireRate;
         public float ClipSize;
@@ -17,14 +18,6 @@ namespace Mayhem.Weaponary
 
         private string m_IconPath;
 
-        public string IconPath
-        {
-            get
-            {
-                return m_IconPath;
-            }
-        }
-
         public BaseWeapon(float clipSize, float fireRate, float reloadTime, float halfScatterRadius, string iconPath)
         {
             m_IsReloading = false;
@@ -36,7 +29,7 @@ namespace Mayhem.Weaponary
             m_IconPath = iconPath;
         }
 
-        public void FireHandler(Vector3 carrierPosition, Vector3 carrierAngle)
+        public override void Use(Vector3 carrierPosition, Vector3 carrierAngle)
         {
             if (isReloading())
             {
@@ -60,7 +53,7 @@ namespace Mayhem.Weaponary
 
         protected virtual void FireBullet(Vector3 carrierPosition, Vector3 carrierAngle)
         {
-            carrierAngle.z = Random.Range(carrierAngle.z - HalfScatterRadius, carrierAngle.z + HalfScatterRadius);
+            carrierAngle.z = UnityEngine.Random.Range(carrierAngle.z - HalfScatterRadius, carrierAngle.z + HalfScatterRadius);
             PhotonNetwork.Instantiate("Bullet", carrierPosition, Quaternion.Euler(carrierAngle), 0);
         }
 
@@ -83,6 +76,16 @@ namespace Mayhem.Weaponary
         {
             m_IsReloading = true;
             m_ReloadStartTime = PhotonNetwork.time;
+        }
+
+        public override string GetIconPath()
+        {
+            return m_IconPath;
+        }
+
+        public override EquipmentType GetType()
+        {
+            return EquipmentType.Weapon;
         }
     }
 }

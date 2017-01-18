@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Mayhem.Weaponary
+namespace Mayhem.Equipment.Weaponary
 {
     class MachineGun : BaseWeapon
     {

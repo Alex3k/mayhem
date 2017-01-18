@@ -1,4 +1,5 @@
-﻿using Mayhem.Weaponary;
+﻿using Mayhem.Equipment;
+using Mayhem.Equipment.Weaponary;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,12 +13,15 @@ namespace Mayhem.Entities
 
         PhotonView m_PhotonView;
 
-        public WeaponBag WeaponBag { get; private set; }
+        public EquipmentBag<EquipmentItem> WeaponBag { get; private set; }
 
         void Awake()
         {
             m_PhotonView = GetComponent<PhotonView>();
-            WeaponBag = new WeaponBag();
+            WeaponBag = new Equipment.EquipmentBag<EquipmentItem>();
+            WeaponBag.AddObject(new Handgun());
+            WeaponBag.AddObject(new MachineGun());
+            WeaponBag.AddObject(new Shotgun());
         }
 
         void FixedUpdate()
@@ -31,6 +35,22 @@ namespace Mayhem.Entities
             handleWeaponary();
         }
 
+        public Equipment.EquipmentBag<EquipmentItem> GetEquipmentBag(EquipmentType equipmentBagType)
+        {
+            if(equipmentBagType == EquipmentType.Weapon)
+            {
+                return WeaponBag;
+            }
+            else if(equipmentBagType == EquipmentType.Item)
+            {
+                return WeaponBag;
+            }
+            else
+            {
+                throw new Exception("Can not get equipment bag of type " + equipmentBagType.ToString());
+            }
+        }
+
         void handleWeaponary()
         {
             var move = new Vector3(CnControls.CnInputManager.GetAxis("ShootHorizontal"), CnControls.CnInputManager.GetAxis("ShootVertical"), 0);
@@ -39,7 +59,7 @@ namespace Mayhem.Entities
             {
                 float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
 
-                WeaponBag.GetCurrentSelectedWeapon().FireHandler(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
+                WeaponBag.GetCurrentSelectedObject().Use(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
             }
         }
 
