@@ -12,7 +12,7 @@ namespace Mayhem.GUI
 
         void Start()
         {
-            m_WeaponSelector = new EquipmentSelector(transform.FindChild("SwipeZone").GetComponent<RectTransform>(), GetComponentInChildren<VerticalLayoutGroup>().gameObject.transform, EMPTY_TILE, EquipmentType.Weapon);
+            m_WeaponSelector = new EquipmentSelector(transform.FindChild("IconCollection").GetComponent<RectTransform>(), GetComponentInChildren<VerticalLayoutGroup>().gameObject.transform, EMPTY_TILE, EquipmentType.Weapon);
         }
 
         void Update()

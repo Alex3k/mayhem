@@ -94,17 +94,20 @@ namespace Mayhem.GUI
 
         private void setSelectedEquipmentIcon()
         {
-            string selectedIcon = m_AvailableEquipment.GetCurrentSelectedObject().GetIconPath();
-
-            for (int i = 0; i < m_ShownTiles.Count; i++)
+            if (m_AvailableEquipment.HasSelectedSomething())
             {
-                if (m_ShownTiles[i].GetComponent<Image>().sprite.name.Equals(selectedIcon))
+                string selectedIcon = m_AvailableEquipment.GetCurrentSelectedObject().GetIconPath();
+
+                for (int i = 0; i < m_ShownTiles.Count; i++)
                 {
-                    m_ShownTiles[i].GetComponent<Image>().color = Color.red;
-                }
-                else
-                {
-                    m_ShownTiles[i].GetComponent<Image>().color = Color.white;
+                    if (m_ShownTiles[i].GetComponent<Image>().sprite.name.Equals(selectedIcon))
+                    {
+                        m_ShownTiles[i].GetComponent<Image>().color = Color.red;
+                    }
+                    else
+                    {
+                        m_ShownTiles[i].GetComponent<Image>().color = Color.white;
+                    }
                 }
             }
         }

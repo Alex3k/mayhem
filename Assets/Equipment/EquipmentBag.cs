@@ -26,12 +26,34 @@ namespace Mayhem.Equipment
         {
             m_Equipment = new List<T>();
         
-            m_SelectedObjectIndex = 0;
+            m_SelectedObjectIndex = -1;
         }
 
         public T GetCurrentSelectedObject()
         {
             return m_Equipment[m_SelectedObjectIndex];
+        }
+
+        public bool HasSelectedSomething()
+        {
+            if(m_SelectedObjectIndex == -1)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        
+        public void Deselect()
+        {
+            m_SelectedObjectIndex = -1;
+
+            if (Changed != null)
+            {
+                Changed(null, new EventArgs());
+            }
         }
 
         public void AddObject(T objectToAdd)
