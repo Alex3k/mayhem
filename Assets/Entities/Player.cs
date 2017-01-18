@@ -1,4 +1,5 @@
 ﻿using Mayhem.Equipment;
+using Mayhem.Equipment.Items;
 using Mayhem.Equipment.Items.Turret;
 using Mayhem.Equipment.Weaponary;
 using System;
@@ -28,6 +29,7 @@ namespace Mayhem.Entities
 
             ItemBag = new EquipmentBag<EquipmentItem>();
             ItemBag.AddObject(new TurretPlacer());
+            ItemBag.AddObject(new Flashlight(GetComponentInChildren<Light>()));
         }
 
         void FixedUpdate()
