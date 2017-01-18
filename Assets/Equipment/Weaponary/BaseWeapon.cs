@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using Mayhem.Equipment;
 
 namespace Mayhem.Equipment.Weaponary
 {

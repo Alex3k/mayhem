@@ -1,7 +1,6 @@
 ﻿using Mayhem.Equipment;
 using Mayhem.Equipment.Weaponary;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Mayhem.Entities

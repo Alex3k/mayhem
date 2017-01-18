@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Mayhem.Equipment.Weaponary
+﻿namespace Mayhem.Equipment.Weaponary
 {
     public class Handgun : BaseWeapon
     {
