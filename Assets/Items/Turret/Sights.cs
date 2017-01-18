@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Mayhem.Weaponary.Turret
+namespace Mayhem.Items.Turret
 {
     public class Sights : MonoBehaviour
     {

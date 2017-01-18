@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using Mayhem.Weaponary;
+using UnityEngine;
 
-namespace Mayhem.Weaponary.Turret
+namespace Mayhem.Items.Turret
 {
     public class Turret : MonoBehaviour
     {
