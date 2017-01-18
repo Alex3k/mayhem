@@ -23,7 +23,7 @@ namespace Mayhem.Equipment.Items.Turret
 
         public override void Use(Vector3 carrierPosition, Vector3 carrierAngle)
         {
-            GameObject.Instantiate(Resources.Load("Turret"), carrierPosition, Quaternion.Euler(carrierAngle));
+            PhotonNetwork.Instantiate("Turret", carrierPosition, Quaternion.Euler(carrierAngle), 0);
         }
     }
 }
