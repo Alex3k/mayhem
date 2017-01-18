@@ -9,12 +9,12 @@ namespace Mayhem.Weaponary.Turret
     public class Sights : MonoBehaviour
     {
         public bool HasTarget { get; private set; }
-        public Vector3 Target { get; private set; }
+        public Transform Target { get; private set; }
 
         void Awake()
         {
             HasTarget = false;
-            Target = Vector2.zero;
+            Target = null;
         }
 
         void OnTriggerStay2D(Collider2D collision)
@@ -22,7 +22,7 @@ namespace Mayhem.Weaponary.Turret
             if (collision.gameObject.tag == "Zombie")
             {
                 HasTarget = true;
-                Target = collision.gameObject.transform.position;
+                Target = collision.gameObject.transform;
             }
         }
 
@@ -31,7 +31,7 @@ namespace Mayhem.Weaponary.Turret
             if (collision.gameObject.tag == "Zombie")
             {
                 HasTarget = false;
-                Target = Vector3.zero;
+                Target = null;
             }
         }
     }

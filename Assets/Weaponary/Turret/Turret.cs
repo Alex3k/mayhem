@@ -17,8 +17,11 @@ namespace Mayhem.Weaponary.Turret
         {
             if (m_MySights.HasTarget)
             {
-                transform.right = m_MySights.Target - transform.position;
-                m_Gun.FireHandler(transform.position, transform.eulerAngles);
+                if (m_MySights.Target != null)
+                {
+                    transform.right = m_MySights.Target.position - transform.position;
+                    m_Gun.FireHandler(transform.position, transform.eulerAngles);
+                }
             }
         }
     }
