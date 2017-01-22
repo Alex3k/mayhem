@@ -13,5 +13,6 @@ namespace Mayhem.Equipment
         public abstract string GetIconPath();
         public abstract void Use(Vector3 carrierPosition, Vector3 carrierAngle);
         public abstract EquipmentType GetType();
+        public abstract bool ShouldBeRemoved();
     }
 }

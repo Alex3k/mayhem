@@ -15,8 +15,13 @@ namespace Mayhem.Equipment
             }
         }
 
-        public delegate void EquipmentChangedEventHandler(object sender, EventArgs e);
-        public event EquipmentChangedEventHandler Changed;
+        public delegate void EquipmentAddedRemoveEventHandler(object sender);
+
+        public delegate void EquipmentSelectedEventHandler(object sender, T newlySelectedEquipment);
+        public delegate void EquipmentDeselectedEventHandler(object sender, T previouslySelectedEquipment);
+        public event EquipmentDeselectedEventHandler EquipmentDeselected;
+        public event EquipmentSelectedEventHandler EquipmentSelected;
+        public event EquipmentAddedRemoveEventHandler EquipmentAddedRemoved;
 
         private List<T> m_Equipment;
 
@@ -25,7 +30,7 @@ namespace Mayhem.Equipment
         public EquipmentBag()
         {
             m_Equipment = new List<T>();
-        
+
             m_SelectedObjectIndex = -1;
         }
 
@@ -36,7 +41,7 @@ namespace Mayhem.Equipment
 
         public bool HasSelectedSomething()
         {
-            if(m_SelectedObjectIndex == -1)
+            if (m_SelectedObjectIndex == -1)
             {
                 return false;
             }
@@ -45,14 +50,27 @@ namespace Mayhem.Equipment
                 return true;
             }
         }
-        
+
         public void Deselect()
         {
+            int previousSelection = m_SelectedObjectIndex;
             m_SelectedObjectIndex = -1;
 
-            if (Changed != null)
+            if (EquipmentDeselected != null)
             {
-                Changed(null, new EventArgs());
+                EquipmentDeselected(null, m_Equipment[previousSelection]);
+            }
+        }
+
+        public void RemoveCurrentObject()
+        {
+            int itemToRemove = m_SelectedObjectIndex;
+            Deselect();
+            m_Equipment.RemoveAt(itemToRemove);
+
+            if (EquipmentAddedRemoved != null)
+            {
+                EquipmentAddedRemoved(null);
             }
         }
 
@@ -64,20 +82,25 @@ namespace Mayhem.Equipment
             }
 
             m_Equipment.Add(objectToAdd);
-
-            if (Changed != null)
+            if (EquipmentAddedRemoved != null)
             {
-                Changed(null, new EventArgs());
+                EquipmentAddedRemoved(null);
             }
         }
 
         public bool ChangeObjectToIndex(int index)
-        {
+        { 
             if (index < 0 || index > m_Equipment.Count)
             {
                 return false;
             }
             m_SelectedObjectIndex = index;
+
+            if (EquipmentSelected != null)
+            {
+                EquipmentSelected(null, m_Equipment[m_SelectedObjectIndex]);
+            }
+
             return true;
         }
     }

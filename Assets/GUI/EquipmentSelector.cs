@@ -34,7 +34,7 @@ namespace Mayhem.GUI
                 if (m_AvailableEquipment == null)
                 {
                     m_AvailableEquipment = Entities.Player.FindLocalPlayer().GetEquipmentBag(m_EquipmentType);
-                    m_AvailableEquipment.Changed += m_PlayerAvailableEquipmentChanged;
+                    m_AvailableEquipment.EquipmentAddedRemoved += m_PlayerAvailableEquipmentChanged;
                     updateEquipmentIcons();
                     setSelectedEquipmentIcon();
                 }
@@ -96,11 +96,12 @@ namespace Mayhem.GUI
         {
             if (m_AvailableEquipment.HasSelectedSomething())
             {
-                string selectedIcon = m_AvailableEquipment.GetCurrentSelectedObject().GetIconPath();
+                string Iconpath = m_AvailableEquipment.GetCurrentSelectedObject().GetIconPath();
 
                 for (int i = 0; i < m_ShownTiles.Count; i++)
                 {
-                    if (m_ShownTiles[i].GetComponent<Image>().sprite.name.Equals(selectedIcon))
+
+                    if (m_ShownTiles[i].GetComponent<Image>().sprite.name.Equals(Iconpath))
                     {
                         m_ShownTiles[i].GetComponent<Image>().color = Color.red;
                     }
@@ -108,11 +109,12 @@ namespace Mayhem.GUI
                     {
                         m_ShownTiles[i].GetComponent<Image>().color = Color.white;
                     }
+
                 }
             }
         }
 
-        private void m_PlayerAvailableEquipmentChanged(object sender, System.EventArgs e)
+        private void m_PlayerAvailableEquipmentChanged(object sender)
         {
             updateEquipmentIcons();
         }

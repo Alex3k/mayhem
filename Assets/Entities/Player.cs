@@ -26,10 +26,29 @@ namespace Mayhem.Entities
             WeaponBag.AddObject(new Shotgun());
 
             WeaponBag.ChangeObjectToIndex(1);
-
+            var tp = new TurretPlacer();
+            tp.AddTurret();
+            tp.AddTurret();
             ItemBag = new EquipmentBag<EquipmentItem>();
-            ItemBag.AddObject(new TurretPlacer());
+            ItemBag.AddObject(tp);
             ItemBag.AddObject(new Flashlight(GetComponentInChildren<Light>()));
+            ItemBag.EquipmentDeselected += ItemBag_EquipmentDeselected;
+            ItemBag.EquipmentSelected += ItemBag_EquipmentSelected;
+        }
+
+        private void ItemBag_EquipmentSelected(object sender, EquipmentItem newSelection)
+        {
+            newSelection.Use(transform.position, transform.eulerAngles);
+
+            if (newSelection.ShouldBeRemoved())
+            {
+                ItemBag.RemoveCurrentObject();
+            }
+        }
+
+        private void ItemBag_EquipmentDeselected(object sender, EquipmentItem previousSelection)
+        {
+            previousSelection.Use(transform.position, transform.eulerAngles); // Toggle it to disable
         }
 
         void FixedUpdate()
@@ -41,16 +60,15 @@ namespace Mayhem.Entities
 
             UpdateMovement();
             handleWeaponary();
-            handleItems();
         }
 
         public Equipment.EquipmentBag<EquipmentItem> GetEquipmentBag(EquipmentType equipmentBagType)
         {
-            if(equipmentBagType == EquipmentType.Weapon)
+            if (equipmentBagType == EquipmentType.Weapon)
             {
                 return WeaponBag;
             }
-            else if(equipmentBagType == EquipmentType.Item)
+            else if (equipmentBagType == EquipmentType.Item)
             {
                 return ItemBag;
             }
@@ -69,15 +87,11 @@ namespace Mayhem.Entities
                 float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
 
                 WeaponBag.GetCurrentSelectedObject().Use(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
-            }
-        }
 
-        void handleItems()
-        {
-            if(ItemBag.HasSelectedSomething())
-            {
-                ItemBag.GetCurrentSelectedObject().Use(transform.position, transform.eulerAngles);
-                ItemBag.Deselect();
+                if (WeaponBag.GetCurrentSelectedObject().ShouldBeRemoved() == true)
+                {
+                    WeaponBag.RemoveCurrentObject();
+                }
             }
         }
 

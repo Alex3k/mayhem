@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace Mayhem.Equipment.Weaponary
 {
@@ -85,6 +86,11 @@ namespace Mayhem.Equipment.Weaponary
         public override EquipmentType GetType()
         {
             return EquipmentType.Weapon;
+        }
+
+        public override bool ShouldBeRemoved()
+        {
+            return false;
         }
     }
 }

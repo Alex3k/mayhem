@@ -28,5 +28,10 @@ namespace Mayhem.Equipment.Items
         {
             m_LightSource.enabled = !m_LightSource.enabled;
         }
+
+        public override bool ShouldBeRemoved()
+        {
+            return false;
+        }
     }
 }
