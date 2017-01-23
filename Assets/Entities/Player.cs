@@ -20,7 +20,7 @@ namespace Mayhem.Entities
         void Awake()
         {
             m_PhotonView = GetComponent<PhotonView>();
-            WeaponBag = new EquipmentBag();
+            WeaponBag = new EquipmentBag(EquipmentBag.BagType.Single);
             WeaponBag.AddObject(new Handgun());
             WeaponBag.AddObject(new MachineGun());
             WeaponBag.AddObject(new Shotgun());
@@ -29,7 +29,7 @@ namespace Mayhem.Entities
             var tp = new TurretPlacer();
             tp.AddTurret();
             tp.AddTurret();
-            ItemBag = new EquipmentBag();
+            ItemBag = new EquipmentBag(EquipmentBag.BagType.Toggleable);
             ItemBag.AddObject(tp);
 
             ItemBag.AddObject(new Flashlight(GetComponentInChildren<Light>()));
@@ -102,12 +102,16 @@ namespace Mayhem.Entities
             {
                 float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
 
-                WeaponBag.GetCurrentSelectedObject().Use(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
-
-                if (WeaponBag.GetCurrentSelectedObject().ShouldBeRemoved() == true)
+                if (WeaponBag.GetCurrentSelectedObject() != null)
                 {
-                    WeaponBag.RemoveCurrentObject();
+                    WeaponBag.GetCurrentSelectedObject().Use(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
+
+                    if (WeaponBag.GetCurrentSelectedObject().ShouldBeRemoved() == true)
+                    {
+                        WeaponBag.RemoveCurrentObject();
+                    }
                 }
+
             }
         }
 

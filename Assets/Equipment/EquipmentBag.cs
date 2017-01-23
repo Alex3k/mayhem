@@ -5,6 +5,12 @@ namespace Mayhem.Equipment
 {
     public class EquipmentBag
     {
+        public enum BagType
+        {
+            Toggleable,
+            Single
+        }
+
         public const int MAX_OBJECT_COUNT = 3;
 
         public EquipmentItem[] Contents
@@ -33,16 +39,26 @@ namespace Mayhem.Equipment
 
         private int m_SelectedObjectIndex;
 
-        public EquipmentBag()
+        private BagType m_BagType;
+
+        public EquipmentBag(BagType bagType)
         {
             m_Equipment = new List<EquipmentItem>();
 
             m_SelectedObjectIndex = -1;
+            m_BagType = bagType;
         }
 
         public EquipmentItem GetCurrentSelectedObject()
         {
-            return m_Equipment[m_SelectedObjectIndex];
+            if (HasSelectedSomething())
+            {
+                return m_Equipment[m_SelectedObjectIndex];
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public bool HasSelectedSomething()
@@ -84,7 +100,7 @@ namespace Mayhem.Equipment
         {
             int itemIndex = m_Equipment.IndexOf(item);
 
-            if(m_SelectedObjectIndex > itemIndex)
+            if (m_SelectedObjectIndex > itemIndex)
             {
                 m_SelectedObjectIndex--;
             }
@@ -113,7 +129,7 @@ namespace Mayhem.Equipment
         }
 
         public bool ChangeObjectToIndex(int index)
-        { 
+        {
             if (index < 0 || index > m_Equipment.Count)
             {
                 return false;
@@ -121,19 +137,50 @@ namespace Mayhem.Equipment
 
             if (m_Equipment[index].GetUsageType() == UsageType.OneTime)
             {
-                if(EquipmentUsed != null)
+                if (EquipmentUsed != null)
                 {
                     EquipmentUsed(null, m_Equipment[index]);
                 }
             }
             else
             {
-                m_SelectedObjectIndex = index;
-
-                if (EquipmentSelected != null)
+                if (m_BagType == BagType.Toggleable)
                 {
-                    EquipmentSelected(null, m_Equipment[m_SelectedObjectIndex]);
+                    if (m_SelectedObjectIndex == index)
+                    {
+                        Deselect();
+                    }
+                    else if (HasSelectedSomething())
+                    {
+                        Deselect();
+
+                        m_SelectedObjectIndex = index;
+
+                        if (EquipmentSelected != null)
+                        {
+                            EquipmentSelected(null, m_Equipment[m_SelectedObjectIndex]);
+                        }
+                    }
+                    else
+                    {
+                        m_SelectedObjectIndex = index;
+
+                        if (EquipmentSelected != null)
+                        {
+                            EquipmentSelected(null, m_Equipment[m_SelectedObjectIndex]);
+                        }
+                    }
                 }
+                else
+                {
+                    m_SelectedObjectIndex = index;
+
+                    if (EquipmentSelected != null)
+                    {
+                        EquipmentSelected(null, m_Equipment[m_SelectedObjectIndex]);
+                    }
+                }
+
             }
             return true;
         }

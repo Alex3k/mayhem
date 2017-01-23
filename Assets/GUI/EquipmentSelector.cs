@@ -35,6 +35,8 @@ namespace Mayhem.GUI
                 {
                     m_AvailableEquipment = Entities.Player.FindLocalPlayer().GetEquipmentBag(m_EquipmentType);
                     m_AvailableEquipment.EquipmentAddedRemoved += m_PlayerAvailableEquipmentChanged;
+                    m_AvailableEquipment.EquipmentSelected += M_AvailableEquipment_EquipmentSelected;
+                    m_AvailableEquipment.EquipmentDeselected += M_AvailableEquipment_EquipmentDeselected;
                     updateEquipmentIcons();
                     setSelectedEquipmentIcon();
                 }
@@ -48,6 +50,16 @@ namespace Mayhem.GUI
                     handleDesktopInput();
                 }
             }
+        }
+
+        private void M_AvailableEquipment_EquipmentDeselected(object sender, EquipmentItem previouslySelectedEquipment)
+        {
+            setSelectedEquipmentIcon();
+        }
+
+        private void M_AvailableEquipment_EquipmentSelected(object sender, EquipmentItem newlySelectedEquipment)
+        {
+            setSelectedEquipmentIcon();
         }
 
         void handleMobileInput()
@@ -66,7 +78,8 @@ namespace Mayhem.GUI
                         if (RectTransformUtility.RectangleContainsScreenPoint(m_ShownTiles[i].GetComponent<RectTransform>(), touch.position))
                         {
                             bool validWeaponChange = m_AvailableEquipment.ChangeObjectToIndex(i);
-                            if (validWeaponChange && m_AvailableEquipment.GetCurrentSelectedObject().GetUsageType() != UsageType.OneTime)
+
+                            if (validWeaponChange && m_AvailableEquipment.HasSelectedSomething() && m_AvailableEquipment.GetCurrentSelectedObject().GetUsageType() != UsageType.OneTime)
                             {
                                 setSelectedEquipmentIcon();
                             }
@@ -83,8 +96,9 @@ namespace Mayhem.GUI
             {
                 if (UnityEngine.Input.GetKeyDown((KeyCode)i))
                 {
+
                     bool validWeaponChange = m_AvailableEquipment.ChangeObjectToIndex(i - (int)KeyCode.Alpha1); // (int)KeyCode.Alpha1 is subtracted as the keycodes start at 49. Subtracting gives a number starting at 0
-                    if (validWeaponChange && m_AvailableEquipment.GetCurrentSelectedObject().GetUsageType() != UsageType.OneTime)
+                    if (validWeaponChange && m_AvailableEquipment.HasSelectedSomething() && m_AvailableEquipment.GetCurrentSelectedObject().GetUsageType() != UsageType.OneTime)
                     {
                         setSelectedEquipmentIcon();
                     }
@@ -100,7 +114,6 @@ namespace Mayhem.GUI
 
                 for (int i = 0; i < m_ShownTiles.Count; i++)
                 {
-
                     if (m_ShownTiles[i].GetComponent<Image>().sprite.name.Equals(Iconpath))
                     {
                         m_ShownTiles[i].GetComponent<Image>().color = Color.red;
@@ -110,6 +123,13 @@ namespace Mayhem.GUI
                         m_ShownTiles[i].GetComponent<Image>().color = Color.white;
                     }
 
+                }
+            }
+            else
+            {
+                for (int i = 0; i < m_ShownTiles.Count; i++)
+                {
+                    m_ShownTiles[i].GetComponent<Image>().color = Color.white;
                 }
             }
         }
