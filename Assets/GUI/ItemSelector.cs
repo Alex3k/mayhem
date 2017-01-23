@@ -3,7 +3,7 @@ using Mayhem.GUI;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Assets.GUI
+namespace Mayhem.GUI
 {
     public class ItemSelector : MonoBehaviour
     {
