@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Mayhem.Equipment
 {
-    public class EquipmentBag<T>
+    public class EquipmentBag
     {
         public const int MAX_OBJECT_COUNT = 3;
 
-        public T[] Objects
+        public EquipmentItem[] Contents
         {
             get
             {
@@ -17,24 +17,30 @@ namespace Mayhem.Equipment
 
         public delegate void EquipmentAddedRemoveEventHandler(object sender);
 
-        public delegate void EquipmentSelectedEventHandler(object sender, T newlySelectedEquipment);
-        public delegate void EquipmentDeselectedEventHandler(object sender, T previouslySelectedEquipment);
+        public delegate void EquipmentSelectedEventHandler(object sender, EquipmentItem newlySelectedEquipment);
+        public delegate void EquipmentDeselectedEventHandler(object sender, EquipmentItem previouslySelectedEquipment);
+        public delegate void EquipmentUsedEventHandler(object sender, EquipmentItem usedEquipment);
         public event EquipmentDeselectedEventHandler EquipmentDeselected;
         public event EquipmentSelectedEventHandler EquipmentSelected;
         public event EquipmentAddedRemoveEventHandler EquipmentAddedRemoved;
 
-        private List<T> m_Equipment;
+        /// <summary>
+        /// This is used for one time use items such as the turret placer. This item does not stay selected.
+        /// </summary>
+        public event EquipmentUsedEventHandler EquipmentUsed;
+
+        private List<EquipmentItem> m_Equipment;
 
         private int m_SelectedObjectIndex;
 
         public EquipmentBag()
         {
-            m_Equipment = new List<T>();
+            m_Equipment = new List<EquipmentItem>();
 
             m_SelectedObjectIndex = -1;
         }
 
-        public T GetCurrentSelectedObject()
+        public EquipmentItem GetCurrentSelectedObject()
         {
             return m_Equipment[m_SelectedObjectIndex];
         }
@@ -65,7 +71,7 @@ namespace Mayhem.Equipment
         public void RemoveCurrentObject()
         {
             int itemToRemove = m_SelectedObjectIndex;
-            Deselect();
+            m_SelectedObjectIndex = -1;
             m_Equipment.RemoveAt(itemToRemove);
 
             if (EquipmentAddedRemoved != null)
@@ -74,7 +80,24 @@ namespace Mayhem.Equipment
             }
         }
 
-        public void AddObject(T objectToAdd)
+        public void RemoveObject(EquipmentItem item)
+        {
+            int itemIndex = m_Equipment.IndexOf(item);
+
+            if(m_SelectedObjectIndex > itemIndex)
+            {
+                m_SelectedObjectIndex--;
+            }
+
+            m_Equipment.Remove(item);
+
+            if (EquipmentAddedRemoved != null)
+            {
+                EquipmentAddedRemoved(null);
+            }
+        }
+
+        public void AddObject(EquipmentItem objectToAdd)
         {
             if (m_Equipment.Count == MAX_OBJECT_COUNT)
             {
@@ -82,6 +105,7 @@ namespace Mayhem.Equipment
             }
 
             m_Equipment.Add(objectToAdd);
+
             if (EquipmentAddedRemoved != null)
             {
                 EquipmentAddedRemoved(null);
@@ -94,13 +118,23 @@ namespace Mayhem.Equipment
             {
                 return false;
             }
-            m_SelectedObjectIndex = index;
 
-            if (EquipmentSelected != null)
+            if (m_Equipment[index].GetUsageType() == UsageType.OneTime)
             {
-                EquipmentSelected(null, m_Equipment[m_SelectedObjectIndex]);
+                if(EquipmentUsed != null)
+                {
+                    EquipmentUsed(null, m_Equipment[index]);
+                }
             }
+            else
+            {
+                m_SelectedObjectIndex = index;
 
+                if (EquipmentSelected != null)
+                {
+                    EquipmentSelected(null, m_Equipment[m_SelectedObjectIndex]);
+                }
+            }
             return true;
         }
     }

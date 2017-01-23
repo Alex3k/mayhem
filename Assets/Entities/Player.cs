@@ -14,13 +14,13 @@ namespace Mayhem.Entities
 
         PhotonView m_PhotonView;
 
-        public EquipmentBag<EquipmentItem> WeaponBag { get; private set; }
-        public EquipmentBag<EquipmentItem> ItemBag { get; private set; }
+        public EquipmentBag WeaponBag { get; private set; }
+        public EquipmentBag ItemBag { get; private set; }
 
         void Awake()
         {
             m_PhotonView = GetComponent<PhotonView>();
-            WeaponBag = new EquipmentBag<EquipmentItem>();
+            WeaponBag = new EquipmentBag();
             WeaponBag.AddObject(new Handgun());
             WeaponBag.AddObject(new MachineGun());
             WeaponBag.AddObject(new Shotgun());
@@ -29,11 +29,24 @@ namespace Mayhem.Entities
             var tp = new TurretPlacer();
             tp.AddTurret();
             tp.AddTurret();
-            ItemBag = new EquipmentBag<EquipmentItem>();
+            ItemBag = new EquipmentBag();
             ItemBag.AddObject(tp);
+
             ItemBag.AddObject(new Flashlight(GetComponentInChildren<Light>()));
+
             ItemBag.EquipmentDeselected += ItemBag_EquipmentDeselected;
             ItemBag.EquipmentSelected += ItemBag_EquipmentSelected;
+            ItemBag.EquipmentUsed += ItemBag_EquipmentUsed;
+        }
+
+        private void ItemBag_EquipmentUsed(object sender, EquipmentItem usedEquipment)
+        {
+            usedEquipment.Use(transform.position, transform.eulerAngles);
+
+            if (usedEquipment.ShouldBeRemoved())
+            {
+                ItemBag.RemoveObject(usedEquipment);
+            }
         }
 
         private void ItemBag_EquipmentSelected(object sender, EquipmentItem newSelection)
@@ -48,7 +61,10 @@ namespace Mayhem.Entities
 
         private void ItemBag_EquipmentDeselected(object sender, EquipmentItem previousSelection)
         {
-            previousSelection.Use(transform.position, transform.eulerAngles); // Toggle it to disable
+            if (previousSelection.GetUsageType() == UsageType.Passive)
+            {
+                previousSelection.Use(transform.position, transform.eulerAngles); // Toggle it to disable
+            }
         }
 
         void FixedUpdate()
@@ -62,7 +78,7 @@ namespace Mayhem.Entities
             handleWeaponary();
         }
 
-        public Equipment.EquipmentBag<EquipmentItem> GetEquipmentBag(EquipmentType equipmentBagType)
+        public Equipment.EquipmentBag GetEquipmentBag(EquipmentType equipmentBagType)
         {
             if (equipmentBagType == EquipmentType.Weapon)
             {

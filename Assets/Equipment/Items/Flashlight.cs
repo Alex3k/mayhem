@@ -33,5 +33,10 @@ namespace Mayhem.Equipment.Items
         {
             return false;
         }
+
+        public override UsageType GetUsageType()
+        {
+            return UsageType.Passive;
+        }
     }
 }

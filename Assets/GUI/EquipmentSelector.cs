@@ -11,7 +11,7 @@ namespace Mayhem.GUI
 
         private List<GameObject> m_ShownTiles;
 
-        private EquipmentBag<EquipmentItem> m_AvailableEquipment;
+        private EquipmentBag m_AvailableEquipment;
 
         private RectTransform m_SelectionZone;
         private Transform m_LayoutGroupTransform;
@@ -66,7 +66,7 @@ namespace Mayhem.GUI
                         if (RectTransformUtility.RectangleContainsScreenPoint(m_ShownTiles[i].GetComponent<RectTransform>(), touch.position))
                         {
                             bool validWeaponChange = m_AvailableEquipment.ChangeObjectToIndex(i);
-                            if (validWeaponChange)
+                            if (validWeaponChange && m_AvailableEquipment.GetCurrentSelectedObject().GetUsageType() != UsageType.OneTime)
                             {
                                 setSelectedEquipmentIcon();
                             }
@@ -79,12 +79,12 @@ namespace Mayhem.GUI
 
         private void handleDesktopInput()
         {
-            for (int i = (int)KeyCode.Alpha1; i < (int)KeyCode.Alpha1 + m_AvailableEquipment.Objects.Length; i++)
+            for (int i = (int)KeyCode.Alpha1; i < (int)KeyCode.Alpha1 + m_AvailableEquipment.Contents.Length; i++)
             {
                 if (UnityEngine.Input.GetKeyDown((KeyCode)i))
                 {
                     bool validWeaponChange = m_AvailableEquipment.ChangeObjectToIndex(i - (int)KeyCode.Alpha1); // (int)KeyCode.Alpha1 is subtracted as the keycodes start at 49. Subtracting gives a number starting at 0
-                    if (validWeaponChange)
+                    if (validWeaponChange && m_AvailableEquipment.GetCurrentSelectedObject().GetUsageType() != UsageType.OneTime)
                     {
                         setSelectedEquipmentIcon();
                     }
@@ -125,11 +125,11 @@ namespace Mayhem.GUI
             m_ShownTiles.Clear();
 
             // Add all required weapons 
-            for (int i = 0; i < m_AvailableEquipment.Objects.Length; i++)
+            for (int i = 0; i < m_AvailableEquipment.Contents.Length; i++)
             {
                 GameObject weaponTile = GameObject.Instantiate(EMPTY_TILE, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 
-                weaponTile.GetComponent<Image>().sprite = Resources.Load<Sprite>(m_AvailableEquipment.Objects[i].GetIconPath());
+                weaponTile.GetComponent<Image>().sprite = Resources.Load<Sprite>(m_AvailableEquipment.Contents[i].GetIconPath());
 
                 weaponTile.SetActive(true);
                 weaponTile.transform.SetParent(m_LayoutGroupTransform);
@@ -137,7 +137,7 @@ namespace Mayhem.GUI
             }
 
             // Add empty tiles as padding
-            for (int i = m_ShownTiles.Count; i < EquipmentBag<EquipmentItem>.MAX_OBJECT_COUNT; i++)
+            for (int i = m_ShownTiles.Count; i < EquipmentBag.MAX_OBJECT_COUNT; i++)
             {
                 GameObject weaponTile = GameObject.Instantiate(EMPTY_TILE, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
 

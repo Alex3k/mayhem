@@ -47,5 +47,10 @@ namespace Mayhem.Equipment.Items.Turret
         {
             m_AvailableTurrets++;
         }
+
+        public override UsageType GetUsageType()
+        {
+            return UsageType.OneTime;
+        }
     }
 }

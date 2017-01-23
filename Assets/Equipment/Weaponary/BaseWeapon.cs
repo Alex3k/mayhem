@@ -92,5 +92,10 @@ namespace Mayhem.Equipment.Weaponary
         {
             return false;
         }
+
+        public override UsageType GetUsageType()
+        {
+            return UsageType.Continued;
+        }
     }
 }
