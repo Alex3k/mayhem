@@ -96,7 +96,23 @@ namespace Mayhem.Entities
 
         void handleWeaponary()
         {
-            var move = new Vector3(CnControls.CnInputManager.GetAxis("ShootHorizontal"), CnControls.CnInputManager.GetAxis("ShootVertical"), 0);
+            Vector3 move = Vector3.zero;
+
+            if (Application.isMobilePlatform)
+            {
+                move = new Vector3(CnControls.CnInputManager.GetAxis("ShootHorizontal"), CnControls.CnInputManager.GetAxis("ShootVertical"), 0);
+            }
+            else
+            {
+                if (UnityEngine.Input.GetMouseButton(0))
+                {
+                    move = UnityEngine.Input.mousePosition;
+
+                    Vector3 objectPos = Camera.main.WorldToScreenPoint(transform.position);
+                    move.x = move.x - objectPos.x;
+                    move.y = move.y - objectPos.y;
+                }
+            }
 
             if (move != Vector3.zero)
             {
