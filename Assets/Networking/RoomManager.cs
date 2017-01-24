@@ -109,8 +109,8 @@ namespace Mayhem.Networking
 
             GameObject.Find("LoadingUI").SetActive(false);
             GameObject.Find("GameUI").SetActive(true);
-
-            GameObject player = PhotonNetwork.Instantiate("Sprite", Vector3.zero, Quaternion.identity, 0);
+            
+            GameObject player = PhotonNetwork.Instantiate("Sprite", new Vector3(GameObject.Find("Map").GetComponent<Map>().Size.x / 2, GameObject.Find("Map").GetComponent<Map>().Size.y / 2, 0), Quaternion.identity, 0);
             GameObject.Find("Main Camera").AddComponent<Camera2DFollow>().target = player.transform;
             PhotonNetwork.player.NickName = Core.SettingsFromMainMenu.PlayerNickName;
             player.GetComponent<Mayhem.Entities.Player>().SetNickname(PhotonNetwork.player.NickName);

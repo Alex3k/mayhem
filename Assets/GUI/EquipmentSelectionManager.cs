@@ -9,6 +9,13 @@ namespace Mayhem.GUI
         public GameObject WeaponContainer;
         public GameObject ItemContainer;
 
+        void Awake()
+        {
+            ItemContainer.SetActive(false);
+            WeaponContainer.SetActive(true);
+            m_CurrentContainer = EquipmentType.Weapon;
+        }
+
         public void ChangeContainer()
         {
             if (m_CurrentContainer == EquipmentType.Item)
