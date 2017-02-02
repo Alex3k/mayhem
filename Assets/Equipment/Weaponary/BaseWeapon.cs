@@ -29,13 +29,13 @@ namespace Mayhem.Equipment.Weaponary
             m_IconPath = iconPath;
         }
 
-        public override void Use(Vector3 carrierPosition, Vector3 carrierAngle)
+        public override void Use(Transform owner, Vector3 angle)
         {
             if (isReloading())
             {
                 return;
             }
-
+            Debug.Log(PhotonNetwork.time - m_LastFireTime);
             if (PhotonNetwork.time - m_LastFireTime > FireRate)
             {
                 if (m_CurrentAmmoInClip == 0)
@@ -44,17 +44,17 @@ namespace Mayhem.Equipment.Weaponary
                 }
                 else
                 {
-                    FireBullet(carrierPosition, carrierAngle);
+                    FireBullet(owner, angle);
                     m_CurrentAmmoInClip--;
                     m_LastFireTime = PhotonNetwork.time;
                 }
             }
         }
 
-        protected virtual void FireBullet(Vector3 carrierPosition, Vector3 carrierAngle)
+        protected virtual void FireBullet(Transform owner, Vector3 carrierAngle)
         {
             carrierAngle.z = UnityEngine.Random.Range(carrierAngle.z - HalfScatterRadius, carrierAngle.z + HalfScatterRadius);
-            PhotonNetwork.Instantiate("Bullet", carrierPosition, Quaternion.Euler(carrierAngle), 0);
+            PhotonNetwork.Instantiate("Bullet", owner.position, Quaternion.Euler(carrierAngle), 0).GetComponent<Bullet>().Parent = owner.GetComponent<Entities.Player>();
         }
 
         private bool isReloading()

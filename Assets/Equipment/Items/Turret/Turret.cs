@@ -21,7 +21,7 @@ namespace Mayhem.Equipment.Items.Turret
                 if (m_MySights.Target != null)
                 {
                     transform.right = m_MySights.Target.position - transform.position;
-                    m_Gun.Use(transform.position, transform.eulerAngles);
+                    m_Gun.Use(transform, transform.eulerAngles);
                 }
             }
         }

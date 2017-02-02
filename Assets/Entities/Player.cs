@@ -11,6 +11,7 @@ namespace Mayhem.Entities
     {
         public float MovementSpeed = 3f;
         public float RotateSpeed = 5f;
+        public ulong Score;
 
         PhotonView m_PhotonView;
 
@@ -37,11 +38,12 @@ namespace Mayhem.Entities
             ItemBag.EquipmentDeselected += ItemBag_EquipmentDeselected;
             ItemBag.EquipmentSelected += ItemBag_EquipmentSelected;
             ItemBag.EquipmentUsed += ItemBag_EquipmentUsed;
+            Score = 0;
         }
 
         private void ItemBag_EquipmentUsed(object sender, EquipmentItem usedEquipment)
         {
-            usedEquipment.Use(transform.position, transform.eulerAngles);
+            usedEquipment.Use(transform, transform.eulerAngles);
 
             if (usedEquipment.ShouldBeRemoved())
             {
@@ -51,7 +53,7 @@ namespace Mayhem.Entities
 
         private void ItemBag_EquipmentSelected(object sender, EquipmentItem newSelection)
         {
-            newSelection.Use(transform.position, transform.eulerAngles);
+            newSelection.Use(transform, transform.eulerAngles);
 
             if (newSelection.ShouldBeRemoved())
             {
@@ -63,7 +65,7 @@ namespace Mayhem.Entities
         {
             if (previousSelection.GetUsageType() == UsageType.Passive)
             {
-                previousSelection.Use(transform.position, transform.eulerAngles); // Toggle it to disable
+                previousSelection.Use(transform, transform.eulerAngles); // Toggle it to disable
             }
         }
 
@@ -120,7 +122,7 @@ namespace Mayhem.Entities
 
                 if (WeaponBag.GetCurrentSelectedObject() != null)
                 {
-                    WeaponBag.GetCurrentSelectedObject().Use(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
+                    WeaponBag.GetCurrentSelectedObject().Use(transform, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
 
                     if (WeaponBag.GetCurrentSelectedObject().ShouldBeRemoved() == true)
                     {
@@ -129,6 +131,11 @@ namespace Mayhem.Entities
                 }
 
             }
+        }
+
+        public void AddScore(ulong value)
+        {
+            Score += value;
         }
 
         void UpdateMovement()

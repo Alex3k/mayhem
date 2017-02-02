@@ -7,6 +7,7 @@ namespace Mayhem.Equipment.Weaponary
         public float MovementSpeed = 100;
         public float TTL = 2;
         private double m_CreationTime;
+        public Entities.Player Parent;
 
         void Start()
         {
@@ -30,6 +31,9 @@ namespace Mayhem.Equipment.Weaponary
             if (collision.transform.tag == "BulletCollider")
             {
                 Destroy(collision.transform.parent.gameObject);
+                Parent.AddScore(5);
+                Destroy(transform.gameObject);
+
             }
         }
 

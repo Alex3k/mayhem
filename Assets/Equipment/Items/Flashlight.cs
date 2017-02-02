@@ -24,11 +24,6 @@ namespace Mayhem.Equipment.Items
             return EquipmentType.Item;
         }
 
-        public override void Use(Vector3 carrierPosition, Vector3 carrierAngle)
-        {
-            m_LightSource.enabled = !m_LightSource.enabled;
-        }
-
         public override bool ShouldBeRemoved()
         {
             return false;
@@ -37,6 +32,11 @@ namespace Mayhem.Equipment.Items
         public override UsageType GetUsageType()
         {
             return UsageType.Passive;
+        }
+
+        public override void Use(Transform owner, Vector3 carrierAngle)
+        {
+            m_LightSource.enabled = !m_LightSource.enabled;
         }
     }
 }
