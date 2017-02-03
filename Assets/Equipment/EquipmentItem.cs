@@ -18,7 +18,7 @@ namespace Mayhem.Equipment
     public abstract class EquipmentItem
     {
         public abstract string GetIconPath();
-        public abstract void Use(Transform owner, Vector3 carrierAngle);
+        public abstract void Use(Vector3 position, Vector3 angle, PhotonView player);
         public abstract EquipmentType GetType();
         public abstract bool ShouldBeRemoved();
         public abstract UsageType GetUsageType();

@@ -17,18 +17,20 @@ namespace Mayhem.Core
 
         public void FixedUpdate()
         {
-            if (PhotonNetwork.isMasterClient)
+            
+
+            m_ScoreBoard.text = "";
+
+            GameObject[] players = PhotonNetwork.FindGameObjectsWithComponent(typeof(Entities.Player)).ToArray();
+
+            players.OrderByDescending(o => o.GetComponent<Entities.Player>().Score);
+
+            for (int i = 0; i < players.Length; i++)
             {
-                m_ScoreBoard.text = "";
-
-                PhotonNetwork.playerList.OrderBy(o => o.GetScore());
-
-                for (int i = 0; i < PhotonNetwork.playerList.Length; i++)
-                {
-                    int score = PhotonNetwork.playerList[i].GetScore();
-                    m_ScoreBoard.text += PhotonNetwork.playerList[i].NickName + ":" + score + "\n";
-                }
+                int score = players[i].GetComponent<Entities.Player>().Score;
+                m_ScoreBoard.text += players[i].GetComponent<Entities.Player>().NickName + ":" + score + "\n";
             }
+
         }
     }
 }

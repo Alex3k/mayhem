@@ -7,11 +7,17 @@ namespace Mayhem.Equipment.Items.Turret
     {
         private Sights m_MySights;
         private MachineGun m_Gun;
+        private PhotonView m_Owner;
 
         void Awake()
         {
             m_MySights = GetComponentInChildren<Sights>();
             m_Gun = new MachineGun();
+        }
+
+        public void SetOwner(PhotonView player)
+        {
+            m_Owner = player;
         }
 
         void Update()
@@ -21,7 +27,7 @@ namespace Mayhem.Equipment.Items.Turret
                 if (m_MySights.Target != null)
                 {
                     transform.right = m_MySights.Target.position - transform.position;
-                    m_Gun.Use(transform, transform.eulerAngles);
+                    m_Gun.Use(transform.position, transform.eulerAngles, m_Owner);
                 }
             }
         }

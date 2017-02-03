@@ -11,11 +11,12 @@ namespace Mayhem.Equipment.Weaponary
         {
         }
 
-        protected override void FireBullet(Transform owner, Vector3 carrierAngle)
+        [PunRPC]
+        protected override void FireBullet(Vector3 position, Vector3 carrierAngle, PhotonView player)
         {
             for (int i = 0; i < PELLET_COUNT; i++)
             {
-                base.FireBullet(owner, carrierAngle);
+                base.FireBullet(position, carrierAngle, player);
             }
         }
     }

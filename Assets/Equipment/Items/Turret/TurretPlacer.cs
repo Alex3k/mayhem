@@ -29,11 +29,11 @@ namespace Mayhem.Equipment.Items.Turret
             return EquipmentType.Item;
         }
 
-        public override void Use(Transform owner, Vector3 carrierAngle)
+        public override void Use(Vector3 position, Vector3 angle, PhotonView player)
         {
             if (m_AvailableTurrets > 0)
             {
-                PhotonNetwork.Instantiate("Turret", owner.position, Quaternion.Euler(carrierAngle), 0);
+                PhotonNetwork.Instantiate("Turret", position, Quaternion.Euler(angle), 0).GetComponent<Turret>().SetOwner(player);
                 m_AvailableTurrets--;
             }
 

@@ -5,7 +5,7 @@ namespace Mayhem.Entities
     public class NickName : MonoBehaviour
     {
         Quaternion rotation;
-        private string m_NickName;
+        public string Name { get; private set; }
 
         void Awake()
         {
@@ -19,7 +19,7 @@ namespace Mayhem.Entities
 
         public void SetNickName(string name)
         {
-            m_NickName = name;
+            Name = name;
             GetComponent<TextMesh>().text = name;
         }
 
@@ -27,7 +27,7 @@ namespace Mayhem.Entities
         {
             if (stream.isWriting)
             {
-                stream.SendNext(m_NickName);
+                stream.SendNext(Name);
 
             }
             else

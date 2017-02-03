@@ -7,20 +7,25 @@ using UnityEngine;
 
 namespace Mayhem.Entities
 {
-    public class Player : MonoBehaviour
+    public class Player : Photon.MonoBehaviour
     {
         public float MovementSpeed = 3f;
         public float RotateSpeed = 5f;
 
-        PhotonView m_PhotonView;
-
         public EquipmentBag WeaponBag { get; private set; }
         public EquipmentBag ItemBag { get; private set; }
-        private PhotonPlayer m_PlayerReference;
+        public int Score { get; private set; }
+
+        public string NickName
+        {
+            get
+            {
+                return GetComponentInChildren<NickName>().Name;
+            }
+        }
 
         void Awake()
         {
-            m_PhotonView = GetComponent<PhotonView>();
             WeaponBag = new EquipmentBag(EquipmentBag.BagType.Single);
             WeaponBag.AddObject(new Handgun());
             WeaponBag.AddObject(new MachineGun());
@@ -42,7 +47,7 @@ namespace Mayhem.Entities
 
         private void ItemBag_EquipmentUsed(object sender, EquipmentItem usedEquipment)
         {
-            usedEquipment.Use(transform, transform.eulerAngles);
+            usedEquipment.Use(transform.position, transform.eulerAngles, photonView);
 
             if (usedEquipment.ShouldBeRemoved())
             {
@@ -52,7 +57,7 @@ namespace Mayhem.Entities
 
         private void ItemBag_EquipmentSelected(object sender, EquipmentItem newSelection)
         {
-            newSelection.Use(transform, transform.eulerAngles);
+            newSelection.Use(transform.position, transform.eulerAngles, photonView);
 
             if (newSelection.ShouldBeRemoved())
             {
@@ -64,13 +69,13 @@ namespace Mayhem.Entities
         {
             if (previousSelection.GetUsageType() == UsageType.Passive)
             {
-                previousSelection.Use(transform, transform.eulerAngles); // Toggle it to disable
+                previousSelection.Use(transform.position, transform.eulerAngles, photonView); // Toggle it to disable
             }
         }
 
         void FixedUpdate()
         {
-            if (m_PhotonView.isMine == false)
+            if (photonView.isMine == false)
             {
                 return;
             }
@@ -121,7 +126,7 @@ namespace Mayhem.Entities
 
                 if (WeaponBag.GetCurrentSelectedObject() != null)
                 {
-                    WeaponBag.GetCurrentSelectedObject().Use(transform, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles);
+                    WeaponBag.GetCurrentSelectedObject().Use(transform.position, Quaternion.AngleAxis(angle, Vector3.forward).eulerAngles, photonView);
 
                     if (WeaponBag.GetCurrentSelectedObject().ShouldBeRemoved() == true)
                     {
@@ -132,14 +137,10 @@ namespace Mayhem.Entities
             }
         }
 
-        public void SetPlayerReference(PhotonPlayer player)
-        {
-            m_PlayerReference = player;
-        }
-
+        [PunRPC]
         public void AddScore(int value)
         {
-            m_PlayerReference.AddScore(value);
+            Score += value;
         }
 
         void UpdateMovement()

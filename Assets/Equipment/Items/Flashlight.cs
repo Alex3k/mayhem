@@ -34,7 +34,7 @@ namespace Mayhem.Equipment.Items
             return UsageType.Passive;
         }
 
-        public override void Use(Transform owner, Vector3 carrierAngle)
+        public override void Use(Vector3 owner, Vector3 carrierAngle, PhotonView player)
         {
             m_LightSource.enabled = !m_LightSource.enabled;
         }

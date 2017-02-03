@@ -2,19 +2,15 @@
 using UnityEngine;
 namespace Mayhem.Entities
 {
-    public class Zombie : MonoBehaviour
+    public class Zombie : Photon.MonoBehaviour
     {
-        PhotonView m_PhotonView;
         private Vector3 m_Target;
         public float MovementSpeed;
-        private Rigidbody2D m_MyRigidBody;
 
         void Awake()
         {
             if (PhotonNetwork.isMasterClient)
             {
-                m_PhotonView = GetComponent<PhotonView>();
-
                 getNewTarget();
             }
         }
@@ -66,6 +62,15 @@ namespace Mayhem.Entities
         public virtual int ScoreReward()
         {
             return 10;
+        }
+
+        [PunRPC]
+        public void Die()
+        {
+            if (photonView.isMine)
+            {
+                PhotonNetwork.Destroy(photonView);
+            }
         }
     }
 }

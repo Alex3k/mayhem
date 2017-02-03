@@ -2,12 +2,12 @@
 
 namespace Mayhem.Equipment.Weaponary
 {
-    public class Bullet : MonoBehaviour
+    public class Bullet : Photon.MonoBehaviour
     {
         public float MovementSpeed = 100;
         public float TTL = 2;
         private double m_CreationTime;
-        public Entities.Player Parent;
+        public PhotonView Parent;
 
         void Start()
         {
@@ -16,9 +16,12 @@ namespace Mayhem.Equipment.Weaponary
 
         void FixedUpdate()
         {
-            if(PhotonNetwork.time - m_CreationTime > TTL)
+            if (PhotonNetwork.time - m_CreationTime > TTL)
             {
-                Destroy(transform.gameObject);
+                if (photonView.isMine)
+                {
+                    PhotonNetwork.Destroy(transform.gameObject);
+                }
             }
             else
             {
@@ -29,12 +32,23 @@ namespace Mayhem.Equipment.Weaponary
         // Bullets handle their own logic to determine if they have collided with zombies
         void OnTriggerStay2D(Collider2D collision)
         {
+            if(Parent == null)
+            {
+                return;
+            }
+
             if (collision.transform.tag == "BulletCollider")
             {
-                Parent.AddScore(collision.transform.parent.gameObject.GetComponent<Entities.Zombie>().ScoreReward());
+                Entities.Zombie enemy = collision.transform.parent.gameObject.GetComponent<Entities.Zombie>();
 
-                Destroy(collision.transform.parent.gameObject);
-                Destroy(transform.gameObject);
+                Parent.RPC("AddScore", PhotonTargets.AllBufferedViaServer, enemy.ScoreReward());
+
+                if (photonView.isMine)
+                {
+                    PhotonNetwork.Destroy(transform.gameObject);
+                }
+
+                enemy.photonView.RPC("Die", PhotonTargets.All);
             }
         }
 
