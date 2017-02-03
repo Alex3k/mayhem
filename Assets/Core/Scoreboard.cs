@@ -23,7 +23,7 @@ namespace Mayhem.Core
 
             GameObject[] players = PhotonNetwork.FindGameObjectsWithComponent(typeof(Entities.Player)).ToArray();
 
-            players.OrderByDescending(o => o.GetComponent<Entities.Player>().Score);
+            players = players.OrderByDescending(o => o.GetComponent<Entities.Player>().Score).ToArray();
 
             for (int i = 0; i < players.Length; i++)
             {
