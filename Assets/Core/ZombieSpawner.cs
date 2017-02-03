@@ -42,7 +42,6 @@ namespace Mayhem.Core
                 {
                     SpawnZombie();
                 }
-
             }
         }
 

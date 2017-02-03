@@ -9,7 +9,6 @@ namespace Mayhem.Entities
         public float MovementSpeed;
         private Rigidbody2D m_MyRigidBody;
 
-        // Use this for initialization
         void Awake()
         {
             if (PhotonNetwork.isMasterClient)
@@ -20,7 +19,6 @@ namespace Mayhem.Entities
             }
         }
 
-        // Update is called once per frame
         void FixedUpdate()
         {
             if (PhotonNetwork.isMasterClient)
@@ -57,12 +55,17 @@ namespace Mayhem.Entities
             }
         }
 
-        void getNewTarget()
+        private void getNewTarget()
         {
             float mapWidth = GameObject.Find("Map").GetComponent<Map>().Size.x;
             float mapHeight = GameObject.Find("Map").GetComponent<Map>().Size.y;
 
             m_Target = new Vector3(Random.Range(0, mapWidth), Random.Range(0, mapHeight), 0);
+        }
+
+        public virtual int ScoreReward()
+        {
+            return 10;
         }
     }
 }

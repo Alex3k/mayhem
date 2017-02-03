@@ -26,14 +26,15 @@ namespace Mayhem.Equipment.Weaponary
             }
         }
 
+        // Bullets handle their own logic to determine if they have collided with zombies
         void OnTriggerStay2D(Collider2D collision)
         {
             if (collision.transform.tag == "BulletCollider")
             {
-                Destroy(collision.transform.parent.gameObject);
-                Parent.AddScore(5);
-                Destroy(transform.gameObject);
+                Parent.AddScore(collision.transform.parent.gameObject.GetComponent<Entities.Zombie>().ScoreReward());
 
+                Destroy(collision.transform.parent.gameObject);
+                Destroy(transform.gameObject);
             }
         }
 

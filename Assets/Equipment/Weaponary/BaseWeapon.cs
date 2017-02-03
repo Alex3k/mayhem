@@ -35,7 +35,7 @@ namespace Mayhem.Equipment.Weaponary
             {
                 return;
             }
-            Debug.Log(PhotonNetwork.time - m_LastFireTime);
+
             if (PhotonNetwork.time - m_LastFireTime > FireRate)
             {
                 if (m_CurrentAmmoInClip == 0)

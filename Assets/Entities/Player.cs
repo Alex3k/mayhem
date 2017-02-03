@@ -11,12 +11,12 @@ namespace Mayhem.Entities
     {
         public float MovementSpeed = 3f;
         public float RotateSpeed = 5f;
-        public ulong Score;
 
         PhotonView m_PhotonView;
 
         public EquipmentBag WeaponBag { get; private set; }
         public EquipmentBag ItemBag { get; private set; }
+        private PhotonPlayer m_PlayerReference;
 
         void Awake()
         {
@@ -38,7 +38,6 @@ namespace Mayhem.Entities
             ItemBag.EquipmentDeselected += ItemBag_EquipmentDeselected;
             ItemBag.EquipmentSelected += ItemBag_EquipmentSelected;
             ItemBag.EquipmentUsed += ItemBag_EquipmentUsed;
-            Score = 0;
         }
 
         private void ItemBag_EquipmentUsed(object sender, EquipmentItem usedEquipment)
@@ -133,9 +132,14 @@ namespace Mayhem.Entities
             }
         }
 
-        public void AddScore(ulong value)
+        public void SetPlayerReference(PhotonPlayer player)
         {
-            Score += value;
+            m_PlayerReference = player;
+        }
+
+        public void AddScore(int value)
+        {
+            m_PlayerReference.AddScore(value);
         }
 
         void UpdateMovement()

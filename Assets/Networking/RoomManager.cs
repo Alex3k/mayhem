@@ -106,15 +106,16 @@ namespace Mayhem.Networking
         private void authorisedJoinRoom()
         {
             PhotonNetwork.player.UserId = PhotonNetwork.AuthValues.UserId;
-
+            
             GameObject.Find("LoadingUI").SetActive(false);
             GameObject.Find("GameUI").SetActive(true);
             
             GameObject player = PhotonNetwork.Instantiate("Sprite", new Vector3(GameObject.Find("Map").GetComponent<Map>().Size.x / 2, GameObject.Find("Map").GetComponent<Map>().Size.y / 2, 0), Quaternion.identity, 0);
             GameObject.Find("Main Camera").AddComponent<Camera2DFollow>().target = player.transform;
             PhotonNetwork.player.NickName = Core.SettingsFromMainMenu.PlayerNickName;
+            PhotonNetwork.player.SetScore(0);
             player.GetComponent<Mayhem.Entities.Player>().SetNickname(PhotonNetwork.player.NickName);
-
+            player.GetComponent<Mayhem.Entities.Player>().SetPlayerReference(PhotonNetwork.player);
             RoomNameLabel.text = "Your ID: " + PhotonNetwork.player.UserId;
         }
 
