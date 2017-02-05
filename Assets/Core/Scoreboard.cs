@@ -17,8 +17,6 @@ namespace Mayhem.Core
 
         public void FixedUpdate()
         {
-            
-
             m_ScoreBoard.text = "";
 
             GameObject[] players = PhotonNetwork.FindGameObjectsWithComponent(typeof(Entities.Player)).ToArray();
