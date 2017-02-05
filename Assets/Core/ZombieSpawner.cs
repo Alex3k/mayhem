@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace Mayhem.Core
 {
-    public class ZombieSpawner : Photon.PunBehaviour
+    public class ZombieSpawner : MonoBehaviour
     {
         public GameObject ZombiePrefab;
         public Text WaveCounter;
@@ -27,31 +27,23 @@ namespace Mayhem.Core
             m_HasTriggeredNextWave = false;
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (PhotonNetwork.isMasterClient && PhotonNetwork.inRoom)
             {
-                if(CurrentWave == 0)
+                for (int i = m_WaveEnemies.Count - 1; i >= 0; i--)
                 {
-                    InitiateNextWave();
+                    if (m_WaveEnemies[i].gameObject == null)
+                    {
+                        m_WaveEnemies.RemoveAt(i);
+                    }
                 }
-                else
+
+                if (m_WaveEnemies.Count == 0 && m_HasTriggeredNextWave == false)
                 {
-
-                    for(int i = m_WaveEnemies.Count - 1; i >= 0; i--)
-                    {
-                        if (m_WaveEnemies[i].gameObject == null)
-                        {
-                            m_WaveEnemies.RemoveAt(i);
-                        }
-                    }
-
-                    if (m_WaveEnemies.Count == 0 && m_HasTriggeredNextWave == false)
-                    {
-                        m_HasTriggeredNextWave = true;
-                        photonView.RPC("InitiateNextWave", PhotonTargets.AllBufferedViaServer);
-                    }
+                    m_HasTriggeredNextWave = true;
+                    GetComponent<PhotonView>().RPC("InitiateNextWave", PhotonTargets.All);
+                    GetComponent<PhotonView>().RPC("SetWaveCounter", PhotonTargets.AllBufferedViaServer, CurrentWave + 1);
                 }
             }
         }
@@ -65,13 +57,18 @@ namespace Mayhem.Core
         }
 
         [PunRPC]
+        public void SetWaveCounter(int waveNumber)
+        {
+            CurrentWave = waveNumber;
+            WaveCounter.text = "Wave: " + CurrentWave;
+        }
+
+        [PunRPC]
         public void InitiateNextWave()
         {
             if (PhotonNetwork.isMasterClient)
             {
-                CurrentWave++;
-                WaveCounter.text = "Wave: " + CurrentWave;
-
+                Debug.Log("RUn");
                 for (int i = 0; i < 20; i++)
                 {
                     SpawnZombie();

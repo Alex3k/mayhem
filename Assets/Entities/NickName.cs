@@ -28,7 +28,6 @@ namespace Mayhem.Entities
             if (stream.isWriting)
             {
                 stream.SendNext(Name);
-
             }
             else
             {
